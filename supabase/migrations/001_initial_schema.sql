@@ -33,6 +33,8 @@ CREATE TABLE IF NOT EXISTS public.members (
   house_status TEXT,
   shaikhuna_connection TEXT,
   shaikhuna_lineage TEXT,
+  study_from_year INTEGER,
+  study_to_year INTEGER,
   subscription_type TEXT NOT NULL CHECK (subscription_type IN ('Maasavari', 'Varshavari')),
   subscription_amount TEXT NOT NULL,
   status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected')),

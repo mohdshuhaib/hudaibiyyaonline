@@ -79,6 +79,8 @@ export default function RegistrationForm() {
 
   const [shaikhunaConnection, setShaikhunaConnection] = useState("");
   const [shaikhunaLineage, setShaikhunaLineage] = useState("");
+  const [studyFromYear, setStudyFromYear] = useState("");
+  const [studyToYear, setStudyToYear] = useState("");
 
   const [subscriptionType, setSubscriptionType] = useState<SubscriptionType>("Maasavari");
   const [subscriptionAmount, setSubscriptionAmount] = useState("200");
@@ -309,6 +311,10 @@ export default function RegistrationForm() {
           shaikhunaConnection === "Shaikhunayude Shishya Parambara"
             ? shaikhunaLineage.trim() || null
             : null,
+        study_from_year:
+          shaikhunaConnection && studyFromYear ? Number(studyFromYear) : null,
+        study_to_year:
+          shaikhunaConnection && studyToYear ? Number(studyToYear) : null,
         subscription_type: subscriptionType,
         subscription_amount: subscriptionAmount.trim(),
       });
@@ -368,6 +374,8 @@ export default function RegistrationForm() {
     setHouseStatus("");
     setShaikhunaConnection("");
     setShaikhunaLineage("");
+    setStudyFromYear("");
+    setStudyToYear("");
     setSubscriptionType("Maasavari");
     setSubscriptionAmount("200");
     setErrors({});
@@ -1163,6 +1171,56 @@ export default function RegistrationForm() {
                   placeholder="ഉദാ: ഞാൻ [ഉസ്താദിന്റെ പേര്] ഉസ്താദിൽ നിന്നാണ് പഠിച്ചത്, അദ്ദേഹം [ശൈഖുനായുടെ ശിഷ്യന്റെ പേര്] ഉസ്താദിൽ നിന്നും, അദ്ദേഹം ശൈഖുനായിൽ നിന്നും പഠിച്ചതാണ്. (e.g., I studied under Usthad ..., who studied under Usthad ..., who is a direct disciple of Shaikhuna)"
                   className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm sm:text-base text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/20"
                 />
+              </div>
+            )}
+
+            {shaikhunaConnection && (
+              <div className="space-y-2 pt-1">
+                <label className="block text-sm font-semibold text-slate-800">
+                  പഠന കാലഘട്ടം (Study Period)
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-medium text-slate-600 mb-1">
+                      മുതൽ (From Year)
+                    </label>
+                    <select
+                      value={studyFromYear}
+                      onChange={(e) => setStudyFromYear(e.target.value)}
+                      className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm sm:text-base text-slate-900 focus:border-blue-600 focus:outline-none"
+                    >
+                      <option value="">വർഷം (From)</option>
+                      {Array.from(
+                        { length: new Date().getFullYear() - 1900 + 1 },
+                        (_, idx) => new Date().getFullYear() - idx
+                      ).map((yr) => (
+                        <option key={yr} value={yr}>
+                          {yr}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-slate-600 mb-1">
+                      വരെ (To Year)
+                    </label>
+                    <select
+                      value={studyToYear}
+                      onChange={(e) => setStudyToYear(e.target.value)}
+                      className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm sm:text-base text-slate-900 focus:border-blue-600 focus:outline-none"
+                    >
+                      <option value="">വർഷം (To)</option>
+                      {Array.from(
+                        { length: new Date().getFullYear() - 1900 + 1 },
+                        (_, idx) => new Date().getFullYear() - idx
+                      ).map((yr) => (
+                        <option key={yr} value={yr}>
+                          {yr}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
               </div>
             )}
           </div>

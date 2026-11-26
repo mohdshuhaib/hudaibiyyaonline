@@ -37,6 +37,8 @@ export interface Member {
   house_status: string | null;
   shaikhuna_connection: string | null;
   shaikhuna_lineage: string | null;
+  study_from_year: number | null;
+  study_to_year: number | null;
   subscription_type: SubscriptionType;
   subscription_amount: string;
   status: MemberStatus;

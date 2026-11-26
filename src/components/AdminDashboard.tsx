@@ -293,6 +293,8 @@ export default function AdminDashboard({
       house_status: m.house_status ?? "",
       shaikhuna_connection: m.shaikhuna_connection ?? "",
       shaikhuna_lineage: m.shaikhuna_lineage ?? "",
+      study_from_year: m.study_from_year ?? "",
+      study_to_year: m.study_to_year ?? "",
       subscription_type: m.subscription_type,
       subscription_amount: m.subscription_amount,
       validity_date: m.validity_date,

@@ -42,6 +42,8 @@ export async function PATCH(
       "house_status",
       "shaikhuna_connection",
       "shaikhuna_lineage",
+      "study_from_year",
+      "study_to_year",
       "subscription_type",
       "subscription_amount",
       "status",
