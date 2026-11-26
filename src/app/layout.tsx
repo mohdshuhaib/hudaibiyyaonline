@@ -16,9 +16,9 @@ const notoSansMalayalam = Noto_Sans_Malayalam({
 });
 
 export const metadata: Metadata = {
-  title: "Hudaibiyya Islamic Trust | ഹുദൈബിയ്യ ഇസ്ലാമിക് ട്രസ്റ്റ്",
+  title: "Hudaibiyya Islamic Charitable Trust | ഹുദൈബിയ്യ ഇസ്ലാമിക് ചാരിറ്റബിൾ ട്രസ്റ്റ്",
   description:
-    "Official Membership Registration & Verification Portal for Hudaibiyya Islamic Trust (ഹുദൈബിയ്യ ഇസ്ലാമിക് ട്രസ്റ്റ്).",
+    "Official Membership Registration & Verification Portal for Hudaibiyya Islamic Charitable Trust (ഹുദൈബിയ്യ ഇസ്ലാമിക് ചാരിറ്റബിൾ ട്രസ്റ്റ്).",
 };
 
 export default function RootLayout({

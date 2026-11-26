@@ -13,8 +13,12 @@ CREATE TABLE IF NOT EXISTS public.members (
   dob DATE NOT NULL,
   blood_group TEXT,
   marital_status TEXT,
+  wife_name TEXT,
+  children_count INTEGER DEFAULT 0,
+  children_details JSONB DEFAULT '[]'::jsonb,
   phone TEXT NOT NULL UNIQUE,
   whatsapp TEXT NOT NULL,
+  email TEXT,
   islamic_qualification TEXT[],
   general_education TEXT NOT NULL,
   profession TEXT NOT NULL,
@@ -26,6 +30,9 @@ CREATE TABLE IF NOT EXISTS public.members (
   post_office TEXT NOT NULL DEFAULT '',
   district TEXT NOT NULL,
   pincode TEXT NOT NULL,
+  house_status TEXT,
+  shaikhuna_connection TEXT,
+  shaikhuna_lineage TEXT,
   subscription_type TEXT NOT NULL CHECK (subscription_type IN ('Maasavari', 'Varshavari')),
   subscription_amount TEXT NOT NULL,
   status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected')),
@@ -39,7 +46,7 @@ CREATE INDEX IF NOT EXISTS idx_members_status ON public.members (status);
 CREATE INDEX IF NOT EXISTS idx_members_phone ON public.members (phone);
 CREATE INDEX IF NOT EXISTS idx_members_created_at ON public.members (created_at DESC);
 
--- 2. Sequential Membership ID generator (HUD-0001, HUD-0002, ...)
+-- 2. Sequential Membership ID generator (HUD-0001, HUD-0002, ...) with gap reuse
 CREATE OR REPLACE FUNCTION public.get_next_membership_id()
 RETURNS TEXT
 LANGUAGE plpgsql
@@ -47,6 +54,7 @@ SECURITY DEFINER
 AS $$
 DECLARE
   max_num INTEGER;
+  next_num INTEGER;
 BEGIN
   SELECT COALESCE(
     MAX(
@@ -61,7 +69,18 @@ BEGIN
   INTO max_num
   FROM public.members;
 
-  RETURN 'HUD-' || LPAD((max_num + 1)::TEXT, 4, '0');
+  SELECT gs
+  INTO next_num
+  FROM generate_series(1, max_num + 1) AS gs
+  WHERE NOT EXISTS (
+    SELECT 1
+    FROM public.members m
+    WHERE m.membership_id = 'HUD-' || LPAD(gs::TEXT, 4, '0')
+  )
+  ORDER BY gs ASC
+  LIMIT 1;
+
+  RETURN 'HUD-' || LPAD(next_num::TEXT, 4, '0');
 END;
 $$;
 

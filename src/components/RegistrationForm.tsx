@@ -15,6 +15,7 @@ import {
   BookOpen,
   AlertCircle,
   RefreshCw,
+  Users,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import {
@@ -22,14 +23,16 @@ import {
   BLOOD_GROUPS,
   formatPermanentAddress,
   GENERAL_EDUCATION_OPTIONS,
+  HOUSE_STATUS_OPTIONS,
   ISLAMIC_QUALIFICATION_OPTIONS,
   KERALA_DISTRICTS,
   MAASAVARI_AMOUNTS,
   MARITAL_STATUS_OPTIONS,
   PROFESSION_OPTIONS,
+  SHAIKHUNA_CONNECTION_OPTIONS,
   VARSHAVARI_AMOUNTS,
 } from "@/lib/constants";
-import type { ResidenceType, SubscriptionType } from "@/types/member";
+import type { ChildDetail, ResidenceType, SubscriptionType } from "@/types/member";
 import PhotoCropperModal from "./PhotoCropperModal";
 
 interface FormErrors {
@@ -50,10 +53,14 @@ export default function RegistrationForm() {
   const [dob, setDob] = useState("");
   const [bloodGroup, setBloodGroup] = useState("");
   const [maritalStatus, setMaritalStatus] = useState("");
+  const [wifeName, setWifeName] = useState("");
+  const [childrenCount, setChildrenCount] = useState(0);
+  const [childrenDetails, setChildrenDetails] = useState<ChildDetail[]>([]);
 
   const [phone, setPhone] = useState("");
   const [sameAsPhone, setSameAsPhone] = useState(true);
   const [whatsapp, setWhatsapp] = useState("");
+  const [email, setEmail] = useState("");
 
   const [islamicQualifications, setIslamicQualifications] = useState<string[]>([]);
   const [generalEducation, setGeneralEducation] = useState("");
@@ -68,6 +75,10 @@ export default function RegistrationForm() {
   const [postOffice, setPostOffice] = useState("");
   const [district, setDistrict] = useState("");
   const [pincode, setPincode] = useState("");
+  const [houseStatus, setHouseStatus] = useState("");
+
+  const [shaikhunaConnection, setShaikhunaConnection] = useState("");
+  const [shaikhunaLineage, setShaikhunaLineage] = useState("");
 
   const [subscriptionType, setSubscriptionType] = useState<SubscriptionType>("Maasavari");
   const [subscriptionAmount, setSubscriptionAmount] = useState("200");
@@ -122,6 +133,30 @@ export default function RegistrationForm() {
   const handleSubscriptionToggle = (type: SubscriptionType) => {
     setSubscriptionType(type);
     setSubscriptionAmount(type === "Maasavari" ? "200" : "2400");
+  };
+
+  const handleChildrenCountChange = (count: number) => {
+    setChildrenCount(count);
+    setChildrenDetails((prev) => {
+      if (count <= 0) return [];
+      const next: ChildDetail[] = [];
+      for (let i = 0; i < count; i++) {
+        next.push(prev[i] ?? { relation: "Son", name: "", dob: "" });
+      }
+      return next;
+    });
+  };
+
+  const updateChildDetail = (
+    index: number,
+    field: keyof ChildDetail,
+    value: string
+  ) => {
+    setChildrenDetails((prev) =>
+      prev.map((item, idx) =>
+        idx === index ? { ...item, [field]: value } : item
+      )
+    );
   };
 
   const validate = (): boolean => {
@@ -179,6 +214,9 @@ export default function RegistrationForm() {
     const amt = Number(subscriptionAmount);
     if (!subscriptionAmount.trim() || Number.isNaN(amt) || amt <= 0) {
       newErrors.subscriptionAmount = "വരിസംഖ്യ തുക നൽകുക (Valid subscription amount is required)";
+    } else if (subscriptionType === "Maasavari" && amt < 100) {
+      newErrors.subscriptionAmount =
+        "മാസവരി തുക കുറഞ്ഞത് ₹100 ആയിരിക്കണം (Minimum Maasavari amount is ₹100)";
     }
 
     setErrors(newErrors);
@@ -246,8 +284,13 @@ export default function RegistrationForm() {
         dob,
         blood_group: bloodGroup || null,
         marital_status: maritalStatus || null,
+        wife_name: maritalStatus === "Married" ? wifeName.trim() || null : null,
+        children_count: maritalStatus === "Married" ? childrenCount : 0,
+        children_details:
+          maritalStatus === "Married" && childrenCount > 0 ? childrenDetails : [],
         phone: cleanPhone,
         whatsapp: finalWhatsapp,
+        email: email.trim() || null,
         islamic_qualification:
           islamicQualifications.length > 0 ? islamicQualifications : null,
         general_education: generalEducation,
@@ -260,6 +303,12 @@ export default function RegistrationForm() {
         post_office: postOffice.trim(),
         district,
         pincode: pincode.trim(),
+        house_status: houseStatus || null,
+        shaikhuna_connection: shaikhunaConnection || null,
+        shaikhuna_lineage:
+          shaikhunaConnection === "Shaikhunayude Shishya Parambara"
+            ? shaikhunaLineage.trim() || null
+            : null,
         subscription_type: subscriptionType,
         subscription_amount: subscriptionAmount.trim(),
       });
@@ -297,9 +346,13 @@ export default function RegistrationForm() {
     setDob("");
     setBloodGroup("");
     setMaritalStatus("");
+    setWifeName("");
+    setChildrenCount(0);
+    setChildrenDetails([]);
     setPhone("");
     setSameAsPhone(true);
     setWhatsapp("");
+    setEmail("");
     setIslamicQualifications([]);
     setGeneralEducation("");
     setProfession("");
@@ -312,6 +365,9 @@ export default function RegistrationForm() {
     setPostOffice("");
     setDistrict("");
     setPincode("");
+    setHouseStatus("");
+    setShaikhunaConnection("");
+    setShaikhunaLineage("");
     setSubscriptionType("Maasavari");
     setSubscriptionAmount("200");
     setErrors({});
@@ -338,14 +394,14 @@ export default function RegistrationForm() {
         <div className="rounded-xl bg-blue-50/80 border border-blue-200 p-5 text-left space-y-3">
           <p className="text-sm sm:text-base text-slate-800 leading-relaxed">
             പ്രിയ <span className="font-bold text-blue-950">{submittedName}</span>,
-            ഹുദൈബിയ്യ ഇസ്ലാമിക് ട്രസ്റ്റിലേക്കുള്ള നിങ്ങളുടെ അംഗത്വ അപേക്ഷ ലഭിച്ചിരിക്കുന്നു.
+            ഹുദൈബിയ്യ ഇസ്ലാമിക് ചാരിറ്റബിൾ ട്രസ്റ്റിലേക്കുള്ള നിങ്ങളുടെ അംഗത്വ അപേക്ഷ ലഭിച്ചിരിക്കുന്നു.
             കമ്മിറ്റിയുടെ പരിശോധനയ്ക്കും അംഗീകാരത്തിനും ശേഷം ജനറൽ ബോഡി സംഗമത്തിൽ വെച്ച്
             നിങ്ങളുടെ ഔദ്യോഗിക PVC ഐഡി കാർഡ് വിതരണം ചെയ്യുന്നതാണ്.
           </p>
           <hr className="border-blue-200/70" />
           <p className="text-sm text-slate-700 leading-relaxed">
             Dear <span className="font-semibold text-slate-900">{submittedName}</span>,
-            your membership registration for <strong>Hudaibiyya Islamic Trust</strong>{" "}
+            your membership registration for <strong>Hudaibiyya Islamic Charitable Trust</strong>{" "}
             has been received. Your physical PVC ID card will be issued after committee
             approval at the upcoming General Body gathering.
           </p>
@@ -523,7 +579,15 @@ export default function RegistrationForm() {
               </label>
               <select
                 value={maritalStatus}
-                onChange={(e) => setMaritalStatus(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setMaritalStatus(val);
+                  if (val !== "Married") {
+                    setWifeName("");
+                    setChildrenCount(0);
+                    setChildrenDetails([]);
+                  }
+                }}
                 className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/20"
               >
                 <option value="">തിരഞ്ഞെടുക്കുക (Select Marital Status)</option>
@@ -534,6 +598,101 @@ export default function RegistrationForm() {
                 ))}
               </select>
             </div>
+
+            {maritalStatus === "Married" && (
+              <>
+                <div>
+                  <label className="block text-sm font-semibold text-slate-800 mb-1.5">
+                    ഭാര്യയുടെ പേര് (Wife&apos;s Name)
+                  </label>
+                  <input
+                    type="text"
+                    value={wifeName}
+                    onChange={(e) => setWifeName(e.target.value)}
+                    placeholder="ഭാര്യയുടെ പേര് നൽകുക"
+                    className="w-full rounded-xl border border-slate-300 px-4 py-3 text-base text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/20"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-slate-800 mb-1.5">
+                    കുട്ടികളുടെ എണ്ണം (Number of Children)
+                  </label>
+                  <select
+                    value={childrenCount}
+                    onChange={(e) => handleChildrenCountChange(Number(e.target.value))}
+                    className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/20"
+                  >
+                    {Array.from({ length: 11 }, (_, i) => (
+                      <option key={i} value={i}>
+                        {i}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {childrenCount > 0 && (
+                  <div className="sm:col-span-2 space-y-3 rounded-xl bg-slate-50 border border-slate-200 p-4">
+                    <p className="text-xs font-bold uppercase tracking-wide text-blue-800">
+                      കുട്ടികളുടെ വിവരങ്ങൾ (Children Details)
+                    </p>
+                    {childrenDetails.map((child, idx) => (
+                      <div
+                        key={idx}
+                        className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 bg-white p-3 rounded-xl border border-slate-200"
+                      >
+                        <div>
+                          <label className="block text-xs font-semibold text-slate-600 mb-1">
+                            മകൻ / മകൾ (Son / Daughter)
+                          </label>
+                          <select
+                            value={child.relation}
+                            onChange={(e) =>
+                              updateChildDetail(
+                                idx,
+                                "relation",
+                                e.target.value as "Son" | "Daughter"
+                              )
+                            }
+                            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+                          >
+                            <option value="Son">മകൻ (Son)</option>
+                            <option value="Daughter">മകൾ (Daughter)</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-xs font-semibold text-slate-600 mb-1">
+                            പേര് (Name)
+                          </label>
+                          <input
+                            type="text"
+                            value={child.name}
+                            onChange={(e) =>
+                              updateChildDetail(idx, "name", e.target.value)
+                            }
+                            placeholder={`കുട്ടി ${idx + 1} പേര്`}
+                            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-semibold text-slate-600 mb-1">
+                            ജനനത്തീയതി (DOB)
+                          </label>
+                          <input
+                            type="date"
+                            value={child.dob}
+                            onChange={(e) =>
+                              updateChildDetail(idx, "dob", e.target.value)
+                            }
+                            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900"
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
           </div>
         </section>
 
@@ -602,6 +761,19 @@ export default function RegistrationForm() {
                 )}
               </div>
             )}
+
+            <div>
+              <label className="block text-sm font-semibold text-slate-800 mb-1.5">
+                ഇമെയിൽ (Email Address)
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="example@gmail.com"
+                className="w-full rounded-xl border border-slate-300 px-4 py-3 text-base text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/20"
+              />
+            </div>
           </div>
         </section>
 
@@ -794,7 +966,7 @@ export default function RegistrationForm() {
               )}
             </div>
 
-            <div className="sm:col-span-2">
+            <div>
               <label className="block text-sm font-semibold text-slate-800 mb-1.5">
                 പിൻകോഡ് (PIN) <span className="text-red-600">*</span>
               </label>
@@ -809,6 +981,24 @@ export default function RegistrationForm() {
               {errors.pincode && (
                 <p className="mt-1 text-xs font-medium text-red-600">{errors.pincode}</p>
               )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-slate-800 mb-1.5">
+                വീടിന്റെ അവസ്ഥ (House Status)
+              </label>
+              <select
+                value={houseStatus}
+                onChange={(e) => setHouseStatus(e.target.value)}
+                className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/20"
+              >
+                <option value="">തിരഞ്ഞെടുക്കുക (Select House Status)</option>
+                {HOUSE_STATUS_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
@@ -921,7 +1111,64 @@ export default function RegistrationForm() {
           </div>
         </section>
 
-        {/* Section 5: Subscription Details */}
+        {/* Section 5: Connection with Shaikhuna */}
+        <section className="rounded-2xl bg-white p-5 sm:p-7 shadow-sm border border-slate-200 space-y-5">
+          <div className="flex items-center gap-3 border-b border-slate-100 pb-3.5">
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-100 text-blue-800">
+              <Users className="w-5 h-5" />
+            </span>
+            <div>
+              <h2 className="text-base sm:text-lg font-bold text-slate-900">
+                5. ശൈഖുനായുമായുള്ള ബന്ധം (Connection with Shaikhuna)
+              </h2>
+              <p className="text-xs text-slate-500">
+                ശൈഖുനായുമായുള്ള പഠന/ശിഷ്യത്വ ബന്ധം തിരഞ്ഞെടുക്കുക
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-semibold text-slate-800 mb-1.5">
+                ബന്ധം തിരഞ്ഞെടുക്കുക (Select Connection)
+              </label>
+              <select
+                value={shaikhunaConnection}
+                onChange={(e) => {
+                  setShaikhunaConnection(e.target.value);
+                  if (e.target.value !== "Shaikhunayude Shishya Parambara") {
+                    setShaikhunaLineage("");
+                  }
+                }}
+                className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/20"
+              >
+                <option value="">തിരഞ്ഞെടുക്കുക (Select Connection)</option>
+                {SHAIKHUNA_CONNECTION_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {shaikhunaConnection === "Shaikhunayude Shishya Parambara" && (
+              <div>
+                <label className="block text-sm font-semibold text-slate-800 mb-1.5">
+                  ശിഷ്യ പരമ്പരയുടെ വിവരങ്ങൾ (Shishya Parambara Details)
+                </label>
+                <textarea
+                  rows={3}
+                  value={shaikhunaLineage}
+                  onChange={(e) => setShaikhunaLineage(e.target.value)}
+                  placeholder="ഉദാ: ഞാൻ [ഉസ്താദിന്റെ പേര്] ഉസ്താദിൽ നിന്നാണ് പഠിച്ചത്, അദ്ദേഹം [ശൈഖുനായുടെ ശിഷ്യന്റെ പേര്] ഉസ്താദിൽ നിന്നും, അദ്ദേഹം ശൈഖുനായിൽ നിന്നും പഠിച്ചതാണ്. (e.g., I studied under Usthad ..., who studied under Usthad ..., who is a direct disciple of Shaikhuna)"
+                  className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm sm:text-base text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/20"
+                />
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* Section 6: Subscription Details */}
         <section className="rounded-2xl bg-white p-5 sm:p-7 shadow-sm border border-slate-200 space-y-5">
           <div className="flex items-center gap-3 border-b border-slate-100 pb-3.5">
             <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-100 text-blue-800">
@@ -929,7 +1176,7 @@ export default function RegistrationForm() {
             </span>
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-900">
-                5. വരിസംഖ്യ വിവരങ്ങൾ (Subscription Details)
+                6. വരിസംഖ്യ വിവരങ്ങൾ (Subscription Details)
               </h2>
               <p className="text-xs text-slate-500">
                 നിങ്ങൾ തിരഞ്ഞെടുക്കുന്ന വരിസംഖ്യ രീതിയും തുകയും രേഖപ്പെടുത്തുക
@@ -984,12 +1231,17 @@ export default function RegistrationForm() {
             </div>
             <input
               type="number"
-              min="1"
+              min={subscriptionType === "Maasavari" ? 100 : 1}
               value={subscriptionAmount}
               onChange={(e) => setSubscriptionAmount(e.target.value)}
               placeholder="തുക നൽകുക (Enter custom amount)"
               className="w-full rounded-xl border border-slate-300 px-4 py-3 text-base text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/20"
             />
+            {subscriptionType === "Maasavari" && (
+              <p className="text-xs text-slate-500">
+                മാസവരി കുറഞ്ഞത് ₹100 മുതൽ നൽകാവുന്നതാണ് (Minimum ₹100 for Maasavari)
+              </p>
+            )}
             {errors.subscriptionAmount && (
               <p className="text-xs font-medium text-red-600">
                 {errors.subscriptionAmount}

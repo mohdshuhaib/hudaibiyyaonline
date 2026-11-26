@@ -119,3 +119,23 @@ export function formatPermanentAddress(member: {
 
 export const MAASAVARI_AMOUNTS = ["100", "200", "300", "500", "1000"];
 export const VARSHAVARI_AMOUNTS = ["1200", "2400", "3600", "6000", "12000"];
+
+export const HOUSE_STATUS_OPTIONS = [
+  { value: "Owned", label: "സ്വന്തം വീട് (Owned House)" },
+  { value: "Rented", label: "വാടക വീട് (Rented House)" },
+  { value: "Joint Family / Ancestral", label: "കൂട്ടുകുടുംബം / തറവാട് (Joint Family / Ancestral)" },
+  { value: "Quarters / Company Provided", label: "ക്വാർട്ടേഴ്സ് / കമ്പനി താമസം (Quarters)" },
+  { value: "Relative's House", label: "ബന്ധുക്കളുടെ വീട് (Relative's House)" },
+  { value: "Other", label: "മറ്റുള്ളവ (Other)" },
+];
+
+export const SHAIKHUNA_CONNECTION_OPTIONS = [
+  {
+    value: "Direct Shishyan",
+    label: "ശൈഖുനായുടെ ശിഷ്യൻ (Direct Shishyan)",
+  },
+  {
+    value: "Shaikhunayude Shishya Parambara",
+    label: "ശൈഖുനായുടെ ശിഷ്യ പരമ്പര (Shaikhuna's Shishya Parambara)",
+  },
+];

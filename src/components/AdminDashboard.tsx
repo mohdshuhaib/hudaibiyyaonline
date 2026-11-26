@@ -15,6 +15,7 @@ import {
   LogOut,
   Printer,
   Search,
+  Trash2,
   Upload,
   User,
   Users,
@@ -22,7 +23,12 @@ import {
   XCircle,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { formatPermanentAddress, KERALA_DISTRICTS } from "@/lib/constants";
+import {
+  formatPermanentAddress,
+  HOUSE_STATUS_OPTIONS,
+  KERALA_DISTRICTS,
+  SHAIKHUNA_CONNECTION_OPTIONS,
+} from "@/lib/constants";
 import type { Member, MemberStatus } from "@/types/member";
 import PhotoCropperModal from "./PhotoCropperModal";
 import { TrustLogo } from "./TrustBrand";
@@ -154,6 +160,33 @@ export default function AdminDashboard({
     }
   };
 
+  const handleDelete = async (member: Member) => {
+    const label = member.membership_id
+      ? `${member.full_name} (${member.membership_id})`
+      : member.full_name;
+    if (
+      !window.confirm(
+        `Are you sure you want to permanently delete ${label}? This will also free their Membership ID for reuse.`
+      )
+    ) {
+      return;
+    }
+
+    setActionLoadingId(member.id);
+    try {
+      const res = await fetch(`/api/admin/members/${member.id}`, {
+        method: "DELETE",
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Failed to delete");
+      setMembers((prev) => prev.filter((m) => m.id !== member.id));
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Delete failed");
+    } finally {
+      setActionLoadingId(null);
+    }
+  };
+
   const handleSaveEdit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingMember) return;
@@ -243,6 +276,9 @@ export default function AdminDashboard({
       marital_status: m.marital_status ?? "",
       phone: m.phone,
       whatsapp: m.whatsapp,
+      email: m.email ?? "",
+      wife_name: m.wife_name ?? "",
+      children_count: m.children_count ?? 0,
       islamic_qualification: (m.islamic_qualification ?? []).join("; "),
       general_education: m.general_education,
       profession: m.profession,
@@ -254,6 +290,9 @@ export default function AdminDashboard({
       post_office: m.post_office ?? "",
       district: m.district,
       pincode: m.pincode,
+      house_status: m.house_status ?? "",
+      shaikhuna_connection: m.shaikhuna_connection ?? "",
+      shaikhuna_lineage: m.shaikhuna_lineage ?? "",
       subscription_type: m.subscription_type,
       subscription_amount: m.subscription_amount,
       validity_date: m.validity_date,
@@ -680,6 +719,17 @@ export default function AdminDashboard({
                             <Edit3 className="w-3.5 h-3.5" />
                             <span>Edit</span>
                           </button>
+
+                          <button
+                            type="button"
+                            disabled={actionLoadingId === m.id}
+                            onClick={() => handleDelete(m)}
+                            title="Delete Member"
+                            className="inline-flex items-center gap-1 rounded-lg border border-red-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-red-700 hover:bg-red-50 disabled:opacity-50 transition"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                            <span>Delete</span>
+                          </button>
                         </div>
                       </td>
                     </tr>
@@ -907,6 +957,66 @@ export default function AdminDashboard({
                   >
                     <option value="Maasavari">Maasavari</option>
                     <option value="Varshavari">Varshavari</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-600 mb-1">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    value={editingMember.email ?? ""}
+                    onChange={(e) =>
+                      setEditingMember({
+                        ...editingMember,
+                        email: e.target.value,
+                      })
+                    }
+                    className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-600 mb-1">
+                    House Status
+                  </label>
+                  <select
+                    value={editingMember.house_status ?? ""}
+                    onChange={(e) =>
+                      setEditingMember({
+                        ...editingMember,
+                        house_status: e.target.value,
+                      })
+                    }
+                    className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm bg-white"
+                  >
+                    <option value="">Select</option>
+                    {HOUSE_STATUS_OPTIONS.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.value}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-600 mb-1">
+                    Connection with Shaikhuna
+                  </label>
+                  <select
+                    value={editingMember.shaikhuna_connection ?? ""}
+                    onChange={(e) =>
+                      setEditingMember({
+                        ...editingMember,
+                        shaikhuna_connection: e.target.value,
+                      })
+                    }
+                    className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm bg-white"
+                  >
+                    <option value="">Select</option>
+                    {SHAIKHUNA_CONNECTION_OPTIONS.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.value}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div>

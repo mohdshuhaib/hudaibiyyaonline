@@ -12,11 +12,13 @@ import {
   Heart,
   Home,
   Loader2,
+  Mail,
   MapPin,
   MessageCircle,
   Phone,
   ShieldAlert,
   User,
+  Users,
 } from "lucide-react";
 import { TrustLogo } from "@/components/TrustBrand";
 import { formatPermanentAddress } from "@/lib/constants";
@@ -130,10 +132,10 @@ async function VerificationContent({
           <TrustLogo className="w-11 h-11 shrink-0" />
           <div>
             <p className="text-xs text-blue-200 font-medium">
-              ഹുദൈബിയ്യ ഇസ്ലാമിക് ട്രസ്റ്റ്
+              ഹുദൈബിയ്യ ഇസ്ലാമിക് ചാരിറ്റബിൾ ട്രസ്റ്റ്
             </p>
             <h1 className="text-base sm:text-lg font-bold leading-tight">
-              Hudaibiyya Islamic Trust
+              Hudaibiyya Islamic Charitable Trust
             </h1>
             <p className="text-[11px] text-blue-100/90">
               Official Member Profile &amp; Verification
@@ -218,6 +220,43 @@ async function VerificationContent({
                     value={member.marital_status}
                   />
                 )}
+                {member.marital_status === "Married" && member.wife_name && (
+                  <DetailRow
+                    icon={<User className="w-4 h-4 text-blue-700" />}
+                    label="Wife's Name"
+                    value={member.wife_name}
+                  />
+                )}
+                {member.marital_status === "Married" &&
+                  member.children_details &&
+                  member.children_details.length > 0 && (
+                    <div className="py-2.5 border-t border-slate-100 space-y-2">
+                      <span className="inline-flex items-center gap-2 text-xs font-medium text-slate-500">
+                        <Users className="w-4 h-4 text-blue-700" />
+                        <span>Children ({member.children_details.length})</span>
+                      </span>
+                      <div className="space-y-1.5 pl-6">
+                        {member.children_details.map((child, idx) => (
+                          <div
+                            key={idx}
+                            className="flex items-center justify-between gap-2 text-xs bg-white rounded-lg px-2.5 py-1.5 border border-slate-200"
+                          >
+                            <span className="font-semibold text-slate-900">
+                              {child.name || `Child ${idx + 1}`}{" "}
+                              <span className="text-slate-500 font-normal">
+                                ({child.relation})
+                              </span>
+                            </span>
+                            {child.dob && (
+                              <span className="text-slate-600 font-medium">
+                                {formatDisplayDate(child.dob)}
+                              </span>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
               </div>
 
               {/* Contact Details */}
@@ -237,6 +276,14 @@ async function VerificationContent({
                   value={member.whatsapp}
                   href={`https://wa.me/${member.whatsapp.replace(/[^\d]/g, "")}`}
                 />
+                {member.email && (
+                  <DetailRow
+                    icon={<Mail className="w-4 h-4 text-blue-700" />}
+                    label="Email"
+                    value={member.email}
+                    href={`mailto:${member.email}`}
+                  />
+                )}
               </div>
 
               {/* Education & Profession */}
@@ -289,6 +336,11 @@ async function VerificationContent({
                   <p className="text-sm font-semibold text-slate-900 leading-relaxed pl-6">
                     {formatPermanentAddress(member)}
                   </p>
+                  {member.house_status && (
+                    <p className="text-xs font-medium text-slate-600 pl-6">
+                      House Status: {member.house_status}
+                    </p>
+                  )}
                 </div>
 
                 <DetailRow
@@ -309,6 +361,30 @@ async function VerificationContent({
                   </p>
                 </div>
               </div>
+
+              {/* Connection with Shaikhuna */}
+              {member.shaikhuna_connection && (
+                <div className="rounded-2xl bg-slate-50 border border-slate-200/80 px-4 py-2">
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-blue-800 pt-1.5 pb-1">
+                    Connection with Shaikhuna
+                  </p>
+                  <DetailRow
+                    icon={<Users className="w-4 h-4 text-blue-700" />}
+                    label="Connection"
+                    value={member.shaikhuna_connection}
+                  />
+                  {member.shaikhuna_lineage && (
+                    <div className="py-2.5 space-y-1">
+                      <span className="text-xs font-medium text-slate-500">
+                        Shishya Parambara Details
+                      </span>
+                      <p className="text-sm font-semibold text-slate-900 leading-relaxed">
+                        {member.shaikhuna_lineage}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Membership & Subscription */}
               <div className="rounded-2xl bg-slate-50 border border-slate-200/80 px-4 py-2">
@@ -344,14 +420,14 @@ async function VerificationContent({
                   {decodedId}
                 </span>
                 . Please verify the QR code or contact the Hudaibiyya Islamic
-                Trust office.
+                Charitable Trust office.
               </p>
             </div>
           )}
 
           <div className="bg-slate-50 border-t border-slate-200 px-6 py-3.5 text-center">
             <p className="text-[11px] font-medium text-slate-500">
-              Hudaibiyya Islamic Trust • ഹുദൈബിയ്യ ഇസ്ലാമിക് ട്രസ്റ്റ്
+              Hudaibiyya Islamic Charitable Trust • ഹുദൈബിയ്യ ഇസ്ലാമിക് ചാരിറ്റബിൾ ട്രസ്റ്റ്
             </p>
           </div>
         </div>

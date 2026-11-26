@@ -371,7 +371,7 @@ export function PvcIdCardBack() {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/logo.png"
-          alt="Hudaibiyya Islamic Trust Logo"
+          alt="Hudaibiyya Islamic Charitable Trust Logo"
           style={{
             width: "100%",
             height: "100%",

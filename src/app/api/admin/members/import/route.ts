@@ -59,14 +59,15 @@ export async function POST(request: Request) {
       (existing ?? []).map((m) => (m.membership_id ?? "").trim()).filter(Boolean)
     );
 
-    let maxHudNum = 0;
-    for (const mid of existingIds) {
-      const match = /^HUD-(\d+)$/.exec(mid);
-      if (match) {
-        const n = parseInt(match[1], 10);
-        if (n > maxHudNum) maxHudNum = n;
+    let nextGapSearch = 1;
+    const getNextAvailableHudId = () => {
+      while (existingIds.has(`HUD-${String(nextGapSearch).padStart(4, "0")}`)) {
+        nextGapSearch += 1;
       }
-    }
+      const id = `HUD-${String(nextGapSearch).padStart(4, "0")}`;
+      nextGapSearch += 1;
+      return id;
+    };
 
     const skipped: { row: number; phone: string; reason: string }[] = [];
     const toInsert: Record<string, unknown>[] = [];
@@ -99,8 +100,7 @@ export async function POST(request: Request) {
 
       let membershipId = (r.membership_id ?? "").trim();
       if (!membershipId || existingIds.has(membershipId)) {
-        maxHudNum += 1;
-        membershipId = `HUD-${String(maxHudNum).padStart(4, "0")}`;
+        membershipId = getNextAvailableHudId();
       }
       existingIds.add(membershipId);
 

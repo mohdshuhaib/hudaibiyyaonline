@@ -16,7 +16,7 @@ export async function POST(request: Request) {
     const supabase = createAdminClient();
     const { data, error } = await supabase
       .from("members")
-      .update({ status: "rejected" })
+      .update({ status: "rejected", membership_id: null })
       .eq("id", id)
       .select()
       .single();

@@ -41,7 +41,7 @@ export default function AdminLogin() {
           <div>
             <h1 className="text-lg font-bold">Committee Admin Portal</h1>
             <p className="text-xs text-blue-200">
-              Hudaibiyya Islamic Trust • ഹുദൈബിയ്യ ഇസ്ലാമിക് ട്രസ്റ്റ്
+              Hudaibiyya Islamic Charitable Trust • ഹുദൈബിയ്യ ഇസ്ലാമിക് ചാരിറ്റബിൾ ട്രസ്റ്റ്
             </p>
           </div>
         </div>

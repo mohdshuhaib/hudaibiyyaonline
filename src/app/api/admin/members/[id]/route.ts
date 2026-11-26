@@ -22,8 +22,12 @@ export async function PATCH(
       "dob",
       "blood_group",
       "marital_status",
+      "wife_name",
+      "children_count",
+      "children_details",
       "phone",
       "whatsapp",
+      "email",
       "islamic_qualification",
       "general_education",
       "profession",
@@ -35,6 +39,9 @@ export async function PATCH(
       "post_office",
       "district",
       "pincode",
+      "house_status",
+      "shaikhuna_connection",
+      "shaikhuna_lineage",
       "subscription_type",
       "subscription_amount",
       "status",
@@ -64,6 +71,33 @@ export async function PATCH(
   } catch (err) {
     return NextResponse.json(
       { error: err instanceof Error ? err.message : "Failed to update member" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(
+  _request: Request,
+  context: { params: Promise<{ id: string }> }
+) {
+  const admin = await requireAdmin();
+  if (!admin) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const { id } = await context.params;
+    const supabase = createAdminClient();
+    const { error } = await supabase.from("members").delete().eq("id", id);
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json({ deleted: true, id });
+  } catch (err) {
+    return NextResponse.json(
+      { error: err instanceof Error ? err.message : "Failed to delete member" },
       { status: 500 }
     );
   }

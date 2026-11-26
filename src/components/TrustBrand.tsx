@@ -7,7 +7,7 @@ export function TrustLogo({ className = "w-14 h-14" }: { className?: string }) {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
-      aria-label="Hudaibiyya Islamic Trust Logo"
+      aria-label="Hudaibiyya Islamic Charitable Trust Logo"
     >
       <circle cx="60" cy="60" r="56" fill="#FFFFFF" stroke="#1E3A8A" strokeWidth="4" />
       <circle cx="60" cy="60" r="48" fill="#EFF6FF" stroke="#2563EB" strokeWidth="1.5" strokeDasharray="3 2" />
