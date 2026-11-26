@@ -12,13 +12,21 @@ export const BLOOD_GROUPS = [
 export const MARITAL_STATUS_OPTIONS = [
   { value: "Single", label: "അവിവാഹിതൻ / അവിവാഹിത (Single)" },
   { value: "Married", label: "വിവാഹിതൻ / വിവാഹിത (Married)" },
-  { value: "Widowed", label: "വിധവ / വിഭാര്യൻ (Widowed)" },
-  { value: "Divorced", label: "വിവാഹമോചിതൻ / വിവാഹമോചിത (Divorced)" },
 ];
 
 export const ISLAMIC_QUALIFICATION_OPTIONS = [
-  { value: "Dars / Hudawi / Faizy / Saqafi / Darimi", label: "ദർസ് / ഹുദവി / ഫൈസി / സഖാഫി / ദാരിമി (Dars / Islamic Scholar)" },
+  { value: "Dars", label: "ദർസ് (Dars)" },
+  { value: "MFB", label: "എം.എഫ്.ബി (MFB)" },
+  { value: "Hudawi", label: "ഹുദവി (Hudawi)" },
+  { value: "Faizy", label: "ഫൈസി (Faizy)" },
+  { value: "Saqafi", label: "സഖാഫി (Saqafi)" },
+  { value: "Darimi", label: "ദാരിമി (Darimi)" },
+  { value: "Nizami", label: "നിസാമി (Nizami)" },
+  { value: "Baqawi", label: "ബാഖവി (Baqawi)" },
+  { value: "Wafy", label: "വാഫി (Wafy)" },
+  { value: "Alim / Moulavi", label: "ആലിം / മൗലവി (Alim / Moulavi)" },
   { value: "Hafiz", label: "ഹാഫിള് (Hafiz)" },
+  { value: "Qari", label: "ഖാരിഅ് (Qari)" },
   { value: "Madrasa (1-5)", label: "മദ്രസ 1-5 (Madrasa 1-5)" },
   { value: "Madrasa (6-10)", label: "മദ്രസ 6-10 (Madrasa 6-10)" },
   { value: "Madrasa (+2 / Higher)", label: "മദ്രസ +2 / ഉന്നത പഠനം (Madrasa Higher)" },

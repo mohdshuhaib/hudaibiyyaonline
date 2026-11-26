@@ -829,7 +829,7 @@ export default function RegistrationForm() {
                   }`}
                 >
                   <Home className="w-5 h-5" />
-                  <span>നാട്ടിൽ (Naatil)</span>
+                  <span>നാട്ടിൽ (In India)</span>
                 </button>
 
                 <button

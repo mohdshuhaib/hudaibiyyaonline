@@ -498,8 +498,8 @@ export default function AdminDashboard({
               }
               className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700"
             >
-              <option value="all">Naatil &amp; Abroad</option>
-              <option value="Naatil">Naatil Only</option>
+              <option value="all">In India &amp; Abroad</option>
+              <option value="Naatil">In India Only</option>
               <option value="Abroad">Abroad Only</option>
             </select>
 
@@ -612,7 +612,7 @@ export default function AdminDashboard({
                           {formatPermanentAddress(m)}
                         </p>
                         <p className="text-[11px] text-slate-500 mt-0.5">
-                          {m.residence_type} • {m.current_region}
+                          {m.residence_type === "Naatil" ? "In India" : "Abroad"} • {m.current_region}
                         </p>
                       </td>
 

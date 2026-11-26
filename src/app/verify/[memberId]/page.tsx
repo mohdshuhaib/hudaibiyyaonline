@@ -37,6 +37,22 @@ function formatDisplayDate(dateStr: string): string {
   }
 }
 
+function calculateAge(dateStr: string): number | null {
+  try {
+    const dob = new Date(dateStr);
+    if (Number.isNaN(dob.getTime())) return null;
+    const today = new Date();
+    let age = today.getFullYear() - dob.getFullYear();
+    const m = today.getMonth() - dob.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+      age--;
+    }
+    return age >= 0 ? age : null;
+  } catch {
+    return null;
+  }
+}
+
 function DetailRow({
   icon,
   label,
@@ -101,6 +117,10 @@ async function VerificationContent({
     : false;
   const isActive =
     member !== null && member.status === "approved" && !isExpired;
+  const age = member ? calculateAge(member.dob) : null;
+  const dobDisplay = member
+    ? `${formatDisplayDate(member.dob)}${age !== null ? ` (${age} yrs)` : ""}`
+    : "";
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-100">
@@ -182,7 +202,7 @@ async function VerificationContent({
                 <DetailRow
                   icon={<Calendar className="w-4 h-4 text-blue-700" />}
                   label="Date of Birth"
-                  value={formatDisplayDate(member.dob)}
+                  value={dobDisplay}
                 />
                 {member.blood_group && (
                   <DetailRow
@@ -226,11 +246,22 @@ async function VerificationContent({
                 </p>
                 {member.islamic_qualification &&
                   member.islamic_qualification.length > 0 && (
-                    <DetailRow
-                      icon={<BookOpen className="w-4 h-4 text-blue-700" />}
-                      label="Islamic Qual."
-                      value={member.islamic_qualification.join(", ")}
-                    />
+                    <div className="py-2.5 border-b border-slate-100 space-y-2">
+                      <span className="inline-flex items-center gap-2 text-xs font-medium text-slate-500">
+                        <BookOpen className="w-4 h-4 text-blue-700" />
+                        <span>Islamic Qualification</span>
+                      </span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {member.islamic_qualification.map((qual) => (
+                          <span
+                            key={qual}
+                            className="inline-block rounded-lg bg-blue-50 border border-blue-200 px-2.5 py-1 text-xs font-semibold text-blue-900"
+                          >
+                            {qual}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
                   )}
                 <DetailRow
                   icon={<GraduationCap className="w-4 h-4 text-blue-700" />}
@@ -249,21 +280,34 @@ async function VerificationContent({
                 <p className="text-[11px] font-bold uppercase tracking-wider text-blue-800 pt-1.5 pb-1">
                   Address &amp; Residence
                 </p>
-                <DetailRow
-                  icon={<Home className="w-4 h-4 text-blue-700" />}
-                  label="Permanent"
-                  value={formatPermanentAddress(member)}
-                />
+
+                <div className="py-2.5 border-b border-slate-100 space-y-1">
+                  <span className="inline-flex items-center gap-2 text-xs font-medium text-slate-500">
+                    <Home className="w-4 h-4 text-blue-700" />
+                    <span>Permanent Address</span>
+                  </span>
+                  <p className="text-sm font-semibold text-slate-900 leading-relaxed pl-6">
+                    {formatPermanentAddress(member)}
+                  </p>
+                </div>
+
                 <DetailRow
                   icon={<Globe className="w-4 h-4 text-blue-700" />}
                   label="Residing"
-                  value={`${member.residence_type} • ${member.current_region}`}
+                  value={`${
+                    member.residence_type === "Naatil" ? "In India" : "Abroad"
+                  } • ${member.current_region}`}
                 />
-                <DetailRow
-                  icon={<MapPin className="w-4 h-4 text-blue-700" />}
-                  label="Current Address"
-                  value={member.current_address}
-                />
+
+                <div className="py-2.5 space-y-1">
+                  <span className="inline-flex items-center gap-2 text-xs font-medium text-slate-500">
+                    <MapPin className="w-4 h-4 text-blue-700" />
+                    <span>Current Address</span>
+                  </span>
+                  <p className="text-sm font-semibold text-slate-900 leading-relaxed pl-6">
+                    {member.current_address}
+                  </p>
+                </div>
               </div>
 
               {/* Membership & Subscription */}
