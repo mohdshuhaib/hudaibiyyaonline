@@ -202,18 +202,14 @@ export default function VerifyMemberClient({
                 <div className="h-14 w-14 rounded-2xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-800">
                   <Lock className="w-7 h-7" />
                 </div>
-                <span className="inline-block rounded-full bg-blue-50 border border-blue-200 px-3 py-0.5 text-xs font-mono font-bold text-blue-900">
-                  {memberId}
-                </span>
                 <h2 className="text-lg font-bold text-slate-900">
                   Enter Passcode to View Details
                 </h2>
                 <p className="text-xs text-slate-600 leading-relaxed max-w-xs">
-                  ഡാറ്റാ സുരക്ഷയ്ക്കായി, നിങ്ങളുടെ മെമ്പർഷിപ്പ് ഐഡിയും മൊബൈൽ
-                  നമ്പറിലെ അവസാന 2 അക്കങ്ങളും ചേർത്ത് നൽകുക.
+                  വിവരങ്ങൾ കാണുന്നതിനായി നിങ്ങളുടെ പാസ്‌കോഡ് നൽകുക.
                   <br />
                   <span className="text-slate-500">
-                    (Enter Member ID + last 2 digits of registered phone)
+                    Please enter your passcode to continue.
                   </span>
                 </p>
               </div>
@@ -231,7 +227,7 @@ export default function VerifyMemberClient({
                     required
                     value={passcode}
                     onChange={(e) => setPasscode(e.target.value)}
-                    placeholder={`e.g. ${memberId}XX`}
+                    placeholder="Enter passcode"
                     className="w-full rounded-xl border border-slate-300 px-4 py-3 pr-11 text-base font-mono text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/20"
                   />
                   <button

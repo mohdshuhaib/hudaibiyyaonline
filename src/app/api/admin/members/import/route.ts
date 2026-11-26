@@ -106,10 +106,7 @@ export async function POST(request: Request) {
 
       const resType =
         r.residence_type?.trim() === "Abroad" ? "Abroad" : "Naatil";
-      const subType =
-        r.subscription_type?.trim() === "Varshavari"
-          ? "Varshavari"
-          : "Maasavari";
+      const subType = "Maasavari";
 
       toInsert.push({
         membership_id: membershipId,

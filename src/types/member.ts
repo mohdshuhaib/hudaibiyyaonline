@@ -1,6 +1,6 @@
 export type MemberStatus = "pending" | "approved" | "rejected";
 export type ResidenceType = "Naatil" | "Abroad";
-export type SubscriptionType = "Maasavari" | "Varshavari";
+export type SubscriptionType = "Maasavari";
 
 export interface ChildDetail {
   relation: "Son" | "Daughter";

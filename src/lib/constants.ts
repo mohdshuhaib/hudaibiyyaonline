@@ -118,7 +118,6 @@ export function formatPermanentAddress(member: {
 }
 
 export const MAASAVARI_AMOUNTS = ["100", "200", "300", "500", "1000"];
-export const VARSHAVARI_AMOUNTS = ["1200", "2400", "3600", "6000", "12000"];
 
 export const HOUSE_STATUS_OPTIONS = [
   { value: "Owned", label: "സ്വന്തം വീട് (Owned House)" },

@@ -48,7 +48,7 @@ export default function AdminDashboard({
   const [residenceFilter, setResidenceFilter] = useState<"all" | "Naatil" | "Abroad">("all");
   const [districtFilter, setDistrictFilter] = useState("all");
   const [subscriptionFilter, setSubscriptionFilter] = useState<
-    "all" | "Maasavari" | "Varshavari"
+    "all" | "Maasavari"
   >("all");
 
   const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
@@ -561,14 +561,13 @@ export default function AdminDashboard({
               value={subscriptionFilter}
               onChange={(e) =>
                 setSubscriptionFilter(
-                  e.target.value as "all" | "Maasavari" | "Varshavari"
+                  e.target.value as "all" | "Maasavari"
                 )
               }
               className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700"
             >
               <option value="all">All Subscriptions</option>
               <option value="Maasavari">Maasavari</option>
-              <option value="Varshavari">Varshavari</option>
             </select>
           </div>
         </div>
@@ -952,13 +951,12 @@ export default function AdminDashboard({
                     onChange={(e) =>
                       setEditingMember({
                         ...editingMember,
-                        subscription_type: e.target.value as "Maasavari" | "Varshavari",
+                        subscription_type: e.target.value as "Maasavari",
                       })
                     }
                     className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm bg-white"
                   >
                     <option value="Maasavari">Maasavari</option>
-                    <option value="Varshavari">Varshavari</option>
                   </select>
                 </div>
                 <div>

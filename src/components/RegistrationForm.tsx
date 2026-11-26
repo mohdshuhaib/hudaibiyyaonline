@@ -30,7 +30,6 @@ import {
   MARITAL_STATUS_OPTIONS,
   PROFESSION_OPTIONS,
   SHAIKHUNA_CONNECTION_OPTIONS,
-  VARSHAVARI_AMOUNTS,
 } from "@/lib/constants";
 import type { ChildDetail, ResidenceType, SubscriptionType } from "@/types/member";
 import PhotoCropperModal from "./PhotoCropperModal";
@@ -82,7 +81,7 @@ export default function RegistrationForm() {
   const [studyFromYear, setStudyFromYear] = useState("");
   const [studyToYear, setStudyToYear] = useState("");
 
-  const [subscriptionType, setSubscriptionType] = useState<SubscriptionType>("Maasavari");
+  const subscriptionType: SubscriptionType = "Maasavari";
   const [subscriptionAmount, setSubscriptionAmount] = useState("200");
 
   // UI state
@@ -130,11 +129,6 @@ export default function RegistrationForm() {
       delete next.currentAddress;
       return next;
     });
-  };
-
-  const handleSubscriptionToggle = (type: SubscriptionType) => {
-    setSubscriptionType(type);
-    setSubscriptionAmount(type === "Maasavari" ? "200" : "2400");
   };
 
   const handleChildrenCountChange = (count: number) => {
@@ -376,7 +370,6 @@ export default function RegistrationForm() {
     setShaikhunaLineage("");
     setStudyFromYear("");
     setStudyToYear("");
-    setSubscriptionType("Maasavari");
     setSubscriptionAmount("200");
     setErrors({});
     setSubmitError(null);
@@ -427,8 +420,7 @@ export default function RegistrationForm() {
     );
   }
 
-  const quickAmounts =
-    subscriptionType === "Maasavari" ? MAASAVARI_AMOUNTS : VARSHAVARI_AMOUNTS;
+  const quickAmounts = MAASAVARI_AMOUNTS;
 
   return (
     <>
@@ -1234,37 +1226,12 @@ export default function RegistrationForm() {
             </span>
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-900">
-                6. വരിസംഖ്യ വിവരങ്ങൾ (Subscription Details)
+                6. മാസവരി വിവരങ്ങൾ (Maasavari Subscription)
               </h2>
               <p className="text-xs text-slate-500">
-                നിങ്ങൾ തിരഞ്ഞെടുക്കുന്ന വരിസംഖ്യ രീതിയും തുകയും രേഖപ്പെടുത്തുക
+                നിങ്ങളുടെ മാസവരി തുക രേഖപ്പെടുത്തുക
               </p>
             </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <button
-              type="button"
-              onClick={() => handleSubscriptionToggle("Maasavari")}
-              className={`rounded-xl border-2 py-3.5 px-4 text-sm sm:text-base font-bold transition ${
-                subscriptionType === "Maasavari"
-                  ? "border-blue-700 bg-blue-700 text-white shadow-md"
-                  : "border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100"
-              }`}
-            >
-              മാസവരി (Maasavari)
-            </button>
-            <button
-              type="button"
-              onClick={() => handleSubscriptionToggle("Varshavari")}
-              className={`rounded-xl border-2 py-3.5 px-4 text-sm sm:text-base font-bold transition ${
-                subscriptionType === "Varshavari"
-                  ? "border-blue-700 bg-blue-700 text-white shadow-md"
-                  : "border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100"
-              }`}
-            >
-              വർഷവരി (Varshavari)
-            </button>
           </div>
 
           <div className="space-y-3">

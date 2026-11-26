@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS public.members (
   shaikhuna_lineage TEXT,
   study_from_year INTEGER,
   study_to_year INTEGER,
-  subscription_type TEXT NOT NULL CHECK (subscription_type IN ('Maasavari', 'Varshavari')),
+  subscription_type TEXT NOT NULL DEFAULT 'Maasavari' CHECK (subscription_type IN ('Maasavari')),
   subscription_amount TEXT NOT NULL,
   status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected')),
   validity_date DATE NOT NULL DEFAULT '2028-12-31',
