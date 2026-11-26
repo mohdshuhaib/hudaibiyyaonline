@@ -2,7 +2,6 @@
 
 import React, { useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 import {
   ArrowLeft,
@@ -14,6 +13,7 @@ import {
   Search,
   Square,
 } from "lucide-react";
+import { renderCardBackPng, renderCardFrontPng } from "@/lib/card-canvas";
 import type { Member } from "@/types/member";
 import { PvcIdCardBack, PvcIdCardFront } from "./PvcIdCard";
 import { TrustLogo } from "./TrustBrand";
@@ -68,15 +68,10 @@ export default function PrintEngine({
     setSelectedIds([]);
   };
 
-  const captureElementPng = async (el: HTMLDivElement | null): Promise<string> => {
-    if (!el) throw new Error("Card element not mounted");
-    const canvas = await html2canvas(el, {
-      scale: 3,
-      useCORS: true,
-      backgroundColor: "#1c0f04",
-      logging: false,
-    });
-    return canvas.toDataURL("image/png", 1.0);
+  const captureFrontPng = async (member: Member): Promise<string> => {
+    const container = frontRefs.current[member.id];
+    const qrCanvas = container?.querySelector("canvas") ?? null;
+    return renderCardFrontPng(member, qrCanvas);
   };
 
   // ATM / CR80 Landscape: 85.6mm x 54mm (Front + Back per member)
@@ -91,12 +86,12 @@ export default function PrintEngine({
       });
 
       setProgress("Rendering card back template...");
-      const backImg = await captureElementPng(backRef.current);
+      const backImg = await renderCardBackPng();
 
       for (let i = 0; i < selectedMembers.length; i++) {
         const m = selectedMembers[i];
         setProgress(`Rendering card ${i + 1} of ${selectedMembers.length}...`);
-        const frontImg = await captureElementPng(frontRefs.current[m.id]);
+        const frontImg = await captureFrontPng(m);
 
         if (i > 0) pdf.addPage([85.6, 54], "landscape");
         pdf.addImage(frontImg, "PNG", 0, 0, 85.6, 54);
@@ -136,7 +131,7 @@ export default function PrintEngine({
       for (let i = 0; i < selectedMembers.length; i++) {
         const m = selectedMembers[i];
         setProgress(`Rendering fronts (${i + 1}/${selectedMembers.length})...`);
-        const frontImg = await captureElementPng(frontRefs.current[m.id]);
+        const frontImg = await captureFrontPng(m);
 
         const indexOnPage = i % 8;
         if (i > 0 && indexOnPage === 0) {
@@ -153,7 +148,7 @@ export default function PrintEngine({
 
       // Back sheet page (8 backs for duplex alignment)
       setProgress("Rendering back sheet...");
-      const backImg = await captureElementPng(backRef.current);
+      const backImg = await renderCardBackPng();
       pdf.addPage("a4", "portrait");
       for (let j = 0; j < Math.min(selectedMembers.length, 8); j++) {
         const col = j % 2;
@@ -390,13 +385,14 @@ export default function PrintEngine({
                       : "overflow-x-auto pb-2"
                   }
                 >
-                  <div
-                    ref={(el) => {
-                      frontRefs.current[m.id] = el;
-                    }}
-                    className="inline-block shadow-xl rounded-[14px]"
-                  >
-                    <PvcIdCardFront member={m} siteUrl={siteUrl} />
+                  <div className="inline-block shadow-xl rounded-[14px]">
+                    <div
+                      ref={(el) => {
+                        frontRefs.current[m.id] = el;
+                      }}
+                    >
+                      <PvcIdCardFront member={m} siteUrl={siteUrl} />
+                    </div>
                   </div>
                 </div>
               ))}

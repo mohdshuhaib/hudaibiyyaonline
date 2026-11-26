@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { QRCodeSVG } from "qrcode.react";
+import { QRCodeCanvas } from "qrcode.react";
 import { formatPermanentAddress } from "@/lib/constants";
 import type { Member } from "@/types/member";
 
@@ -311,12 +311,13 @@ export function PvcIdCardFront({ member, siteUrl }: PvcIdCardProps) {
                 boxShadow: "0 2px 8px rgba(0,0,0,0.35)",
               }}
             >
-              <QRCodeSVG
+              <QRCodeCanvas
                 value={verifyUrl}
-                size={68}
+                size={160}
                 level="M"
                 fgColor="#0f172a"
                 bgColor="#ffffff"
+                style={{ width: "68px", height: "68px", display: "block" }}
               />
             </div>
           </div>
