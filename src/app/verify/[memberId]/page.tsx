@@ -1,18 +1,27 @@
 import React, { Suspense } from "react";
-import Link from "next/link";
 import { connection } from "next/server";
 import {
+  BookOpen,
+  Briefcase,
   Calendar,
   CheckCircle2,
+  CreditCard,
+  Droplets,
+  Globe,
+  GraduationCap,
+  Heart,
+  Home,
   Loader2,
   MapPin,
+  MessageCircle,
+  Phone,
   ShieldAlert,
   User,
 } from "lucide-react";
 import { TrustLogo } from "@/components/TrustBrand";
 import { formatPermanentAddress } from "@/lib/constants";
 import { createAdminClient } from "@/lib/supabase/server";
-import type { PublicVerificationMember } from "@/types/member";
+import type { Member } from "@/types/member";
 
 function formatDisplayDate(dateStr: string): string {
   try {
@@ -28,6 +37,39 @@ function formatDisplayDate(dateStr: string): string {
   }
 }
 
+function DetailRow({
+  icon,
+  label,
+  value,
+  href,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  href?: string;
+}) {
+  return (
+    <div className="flex items-start justify-between gap-3 py-2.5 border-b border-slate-100 last:border-b-0">
+      <span className="inline-flex items-center gap-2 text-xs font-medium text-slate-500 shrink-0 pt-0.5">
+        {icon}
+        <span>{label}</span>
+      </span>
+      {href ? (
+        <a
+          href={href}
+          className="text-sm font-semibold text-blue-700 hover:underline text-right break-all"
+        >
+          {value}
+        </a>
+      ) : (
+        <span className="text-sm font-semibold text-slate-900 text-right leading-snug break-words max-w-[62%]">
+          {value}
+        </span>
+      )}
+    </div>
+  );
+}
+
 async function VerificationContent({
   params,
 }: {
@@ -37,20 +79,18 @@ async function VerificationContent({
   const { memberId } = await params;
   const decodedId = decodeURIComponent(memberId).trim().toUpperCase();
 
-  let member: PublicVerificationMember | null = null;
+  let member: Member | null = null;
 
   try {
     const supabase = createAdminClient();
     const { data } = await supabase
       .from("members")
-      .select(
-        "membership_id, full_name, photo_url, house_name, place_po, post_office, district, pincode, current_region, status, validity_date"
-      )
+      .select("*")
       .eq("membership_id", decodedId)
       .maybeSingle();
 
     if (data) {
-      member = data as PublicVerificationMember;
+      member = data as Member;
     }
   } catch {
     member = null;
@@ -64,30 +104,30 @@ async function VerificationContent({
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-100">
-      {/* Header */}
-      <header className="bg-gradient-to-r from-blue-950 to-blue-800 text-white py-5 px-4 shadow-md">
-        <div className="mx-auto max-w-md flex items-center gap-3.5">
-          <TrustLogo className="w-12 h-12 shrink-0" />
+      {/* Institutional Header */}
+      <header className="bg-gradient-to-r from-blue-950 via-blue-900 to-blue-800 text-white py-4 px-4 shadow-md">
+        <div className="mx-auto max-w-lg flex items-center gap-3.5">
+          <TrustLogo className="w-11 h-11 shrink-0" />
           <div>
             <p className="text-xs text-blue-200 font-medium">
               ഹുദൈബിയ്യ ഇസ്ലാമിക് ട്രസ്റ്റ്
             </p>
-            <h1 className="text-lg font-bold leading-tight">
+            <h1 className="text-base sm:text-lg font-bold leading-tight">
               Hudaibiyya Islamic Trust
             </h1>
             <p className="text-[11px] text-blue-100/90">
-              Official Member Verification Portal
+              Official Member Profile &amp; Verification
             </p>
           </div>
         </div>
       </header>
 
-      {/* Main Verification Card */}
-      <main className="flex-1 flex items-center justify-center p-4">
-        <div className="w-full max-w-md rounded-3xl bg-white shadow-xl border border-slate-200 overflow-hidden">
+      {/* Main Profile Card */}
+      <main className="flex-1 mx-auto w-full max-w-lg px-3.5 py-5 sm:py-7">
+        <div className="rounded-3xl bg-white shadow-xl border border-slate-200 overflow-hidden">
           {/* Status Banner */}
           <div
-            className={`px-6 py-4 flex items-center justify-center gap-2.5 text-white font-bold text-sm tracking-wide ${
+            className={`px-4 py-3.5 flex items-center justify-center gap-2 text-white font-bold text-xs sm:text-sm tracking-wide ${
               isActive ? "bg-emerald-600" : "bg-red-600"
             }`}
           >
@@ -105,75 +145,152 @@ async function VerificationContent({
           </div>
 
           {member ? (
-            <div className="p-6 sm:p-8 flex flex-col items-center text-center space-y-5">
-              {/* Member Photo */}
-              <div className="h-32 w-32 rounded-full border-4 border-blue-100 bg-slate-100 shadow-md overflow-hidden flex items-center justify-center">
-                {member.photo_url ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={member.photo_url}
-                    alt={member.full_name}
-                    className="h-full w-full object-cover"
+            <div className="p-4 sm:p-6 space-y-5">
+              {/* Hero Profile */}
+              <div className="flex flex-col items-center text-center space-y-3 pb-4 border-b border-slate-100">
+                <div className="h-28 w-28 sm:h-32 sm:w-32 rounded-full border-4 border-blue-100 bg-slate-100 shadow-md overflow-hidden flex items-center justify-center">
+                  {member.photo_url ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={member.photo_url}
+                      alt={member.full_name}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <User className="w-14 h-14 text-slate-400" />
+                  )}
+                </div>
+
+                <div className="space-y-1">
+                  <span className="inline-block rounded-full bg-blue-50 border border-blue-200 px-3.5 py-1 text-xs font-mono font-bold text-blue-900">
+                    {member.membership_id}
+                  </span>
+                  <h2 className="text-xl sm:text-2xl font-bold text-slate-900">
+                    {member.full_name}
+                  </h2>
+                  <p className="text-xs sm:text-sm text-slate-500 font-medium">
+                    S/o {member.fathers_name}
+                  </p>
+                </div>
+              </div>
+
+              {/* Personal Details */}
+              <div className="rounded-2xl bg-slate-50 border border-slate-200/80 px-4 py-2">
+                <p className="text-[11px] font-bold uppercase tracking-wider text-blue-800 pt-1.5 pb-1">
+                  Personal Details
+                </p>
+                <DetailRow
+                  icon={<Calendar className="w-4 h-4 text-blue-700" />}
+                  label="Date of Birth"
+                  value={formatDisplayDate(member.dob)}
+                />
+                {member.blood_group && (
+                  <DetailRow
+                    icon={<Droplets className="w-4 h-4 text-rose-600" />}
+                    label="Blood Group"
+                    value={member.blood_group}
                   />
-                ) : (
-                  <User className="w-14 h-14 text-slate-400" />
+                )}
+                {member.marital_status && (
+                  <DetailRow
+                    icon={<Heart className="w-4 h-4 text-blue-700" />}
+                    label="Marital Status"
+                    value={member.marital_status}
+                  />
                 )}
               </div>
 
-              <div className="space-y-1.5">
-                <span className="inline-block rounded-full bg-blue-50 border border-blue-200 px-3.5 py-1 text-xs font-mono font-bold text-blue-900">
-                  {member.membership_id}
-                </span>
-                <h2 className="text-2xl font-bold text-slate-900">
-                  {member.full_name}
-                </h2>
+              {/* Contact Details */}
+              <div className="rounded-2xl bg-slate-50 border border-slate-200/80 px-4 py-2">
+                <p className="text-[11px] font-bold uppercase tracking-wider text-blue-800 pt-1.5 pb-1">
+                  Contact Details
+                </p>
+                <DetailRow
+                  icon={<Phone className="w-4 h-4 text-blue-700" />}
+                  label="Mobile"
+                  value={member.phone}
+                  href={`tel:${member.phone.replace(/\s+/g, "")}`}
+                />
+                <DetailRow
+                  icon={<MessageCircle className="w-4 h-4 text-emerald-600" />}
+                  label="WhatsApp"
+                  value={member.whatsapp}
+                  href={`https://wa.me/${member.whatsapp.replace(/[^\d]/g, "")}`}
+                />
               </div>
 
-              {/* Safe Public Details Only */}
-              <div className="w-full rounded-2xl bg-slate-50 border border-slate-200 p-4 space-y-3 text-left">
-                <div className="flex items-start justify-between gap-3">
-                  <span className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500 shrink-0">
-                    <MapPin className="w-4 h-4 text-blue-700" />
-                    Permanent Address
-                  </span>
-                  <span className="text-sm font-semibold text-slate-900 text-right leading-snug">
-                    {formatPermanentAddress(member)}
-                  </span>
-                </div>
-
-                <div className="border-t border-slate-200/70 pt-3 flex items-center justify-between gap-3">
-                  <span className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500">
-                    <MapPin className="w-4 h-4 text-blue-700" />
-                    Current Region
-                  </span>
-                  <span className="text-sm font-semibold text-slate-900 text-right">
-                    {member.current_region}
-                  </span>
-                </div>
-
-                <div className="border-t border-slate-200/70 pt-3 flex items-center justify-between gap-3">
-                  <span className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500">
-                    <Calendar className="w-4 h-4 text-blue-700" />
-                    Validity Date
-                  </span>
-                  <span
-                    className={`text-sm font-semibold ${
-                      isExpired ? "text-red-600" : "text-slate-900"
-                    }`}
-                  >
-                    {formatDisplayDate(member.validity_date)}
-                  </span>
-                </div>
+              {/* Education & Profession */}
+              <div className="rounded-2xl bg-slate-50 border border-slate-200/80 px-4 py-2">
+                <p className="text-[11px] font-bold uppercase tracking-wider text-blue-800 pt-1.5 pb-1">
+                  Education &amp; Profession
+                </p>
+                {member.islamic_qualification &&
+                  member.islamic_qualification.length > 0 && (
+                    <DetailRow
+                      icon={<BookOpen className="w-4 h-4 text-blue-700" />}
+                      label="Islamic Qual."
+                      value={member.islamic_qualification.join(", ")}
+                    />
+                  )}
+                <DetailRow
+                  icon={<GraduationCap className="w-4 h-4 text-blue-700" />}
+                  label="General Ed."
+                  value={member.general_education}
+                />
+                <DetailRow
+                  icon={<Briefcase className="w-4 h-4 text-blue-700" />}
+                  label="Profession"
+                  value={member.profession}
+                />
               </div>
 
-              <p className="text-xs text-slate-500">
+              {/* Address & Residence */}
+              <div className="rounded-2xl bg-slate-50 border border-slate-200/80 px-4 py-2">
+                <p className="text-[11px] font-bold uppercase tracking-wider text-blue-800 pt-1.5 pb-1">
+                  Address &amp; Residence
+                </p>
+                <DetailRow
+                  icon={<Home className="w-4 h-4 text-blue-700" />}
+                  label="Permanent"
+                  value={formatPermanentAddress(member)}
+                />
+                <DetailRow
+                  icon={<Globe className="w-4 h-4 text-blue-700" />}
+                  label="Residing"
+                  value={`${member.residence_type} • ${member.current_region}`}
+                />
+                <DetailRow
+                  icon={<MapPin className="w-4 h-4 text-blue-700" />}
+                  label="Current Address"
+                  value={member.current_address}
+                />
+              </div>
+
+              {/* Membership & Subscription */}
+              <div className="rounded-2xl bg-slate-50 border border-slate-200/80 px-4 py-2">
+                <p className="text-[11px] font-bold uppercase tracking-wider text-blue-800 pt-1.5 pb-1">
+                  Membership &amp; Subscription
+                </p>
+                <DetailRow
+                  icon={<CreditCard className="w-4 h-4 text-blue-700" />}
+                  label="Subscription"
+                  value={`${member.subscription_type} (₹${member.subscription_amount})`}
+                />
+                <DetailRow
+                  icon={<Calendar className="w-4 h-4 text-blue-700" />}
+                  label="Valid Until"
+                  value={formatDisplayDate(member.validity_date)}
+                />
+              </div>
+
+              <p className="text-center text-xs text-slate-500 pt-1">
                 {isActive
-                  ? "ഈ അംഗത്വം നിലവിൽ സാധുവാണ്. • This membership is currently active and verified."
+                  ? "ഈ അംഗത്വം നിലവിൽ സാധുവാണ്. • This membership is active and verified."
                   : "ഈ അംഗത്വം നിലവിൽ സജീവമല്ല. • This membership is inactive, pending, or expired."}
               </p>
             </div>
           ) : (
-            <div className="p-8 text-center space-y-4">
+            <div className="p-8 text-center space-y-3">
               <p className="text-base font-semibold text-slate-800">
                 Record Not Found
               </p>
@@ -188,13 +305,10 @@ async function VerificationContent({
             </div>
           )}
 
-          <div className="bg-slate-50 border-t border-slate-200 px-6 py-4 text-center">
-            <Link
-              href="/"
-              className="text-xs font-semibold text-blue-700 hover:underline"
-            >
-              Hudaibiyya Islamic Trust Registration Portal →
-            </Link>
+          <div className="bg-slate-50 border-t border-slate-200 px-6 py-3.5 text-center">
+            <p className="text-[11px] font-medium text-slate-500">
+              Hudaibiyya Islamic Trust • ഹുദൈബിയ്യ ഇസ്ലാമിക് ട്രസ്റ്റ്
+            </p>
           </div>
         </div>
       </main>
