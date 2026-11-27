@@ -23,86 +23,22 @@ function formatDobSlash(dateStr: string): string {
   }
 }
 
-/**
- * Shared CMYK-gamut-safe dark bronze & warm gold geometric background
- * matching the reference ATM/CR80 card design (514px x 324px = 85.6mm x 54mm).
- */
-function CardBackgroundSvg({ withGoldWave = true }: { withGoldWave?: boolean }) {
+function CardBackgroundImage() {
   return (
-    <svg
-      viewBox="0 0 514 324"
-      preserveAspectRatio="none"
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src="/card-bg.jpg"
+      alt=""
       style={{
         position: "absolute",
         inset: 0,
         width: "100%",
         height: "100%",
+        objectFit: "cover",
         zIndex: 0,
-        display: "block",
+        pointerEvents: "none",
       }}
-    >
-      <defs>
-        <linearGradient id="bronzeBase" x1="0%" y1="100%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="#6e4110" />
-          <stop offset="35%" stopColor="#2b1706" />
-          <stop offset="75%" stopColor="#1c0f04" />
-          <stop offset="100%" stopColor="#3d2209" />
-        </linearGradient>
-        <linearGradient id="goldArc" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#5c360e" stopOpacity="0.65" />
-          <stop offset="100%" stopColor="#1e1004" stopOpacity="0.85" />
-        </linearGradient>
-        <linearGradient id="goldGlow" x1="0%" y1="100%" x2="80%" y2="20%">
-          <stop offset="0%" stopColor="#9c6018" stopOpacity="0.55" />
-          <stop offset="100%" stopColor="#261405" stopOpacity="0" />
-        </linearGradient>
-      </defs>
-
-      {/* Base dark bronze-brown */}
-      <rect width="514" height="324" fill="url(#bronzeBase)" />
-
-      {/* Warm amber glow bottom-left */}
-      <ellipse cx="70" cy="285" rx="180" ry="120" fill="url(#goldGlow)" />
-
-      {/* Subtle geometric angular accents */}
-      <path d="M0 165 L95 235 L95 324 L0 324 Z" fill="#47280a" opacity="0.45" />
-      <path d="M115 220 L215 295 L215 324 L115 324 Z" fill="#211205" opacity="0.6" />
-
-      {/* Right-side large curved dome/arc */}
-      <path
-        d="M325 324 C320 205 385 110 514 85 L514 324 Z"
-        fill="url(#goldArc)"
-      />
-
-      {/* Top header dark band */}
-      <path
-        d="M0 0 L514 0 L514 55 C385 68 205 26 0 76 Z"
-        fill="#190d03"
-        opacity="0.92"
-      />
-
-      {/* Top-left subtle chevron arrows */}
-      <g fill="#5e380e" opacity="0.45">
-        <polygon points="35,0 60,0 84,26 60,52 35,52 59,26" />
-        <polygon points="75,0 100,0 124,26 100,52 75,52 99,26" />
-        <polygon points="115,0 140,0 164,26 140,52 115,52 139,26" />
-        <polygon points="155,0 180,0 204,26 180,52 155,52 179,26" />
-        <polygon points="195,0 220,0 244,26 220,52 195,52 219,26" />
-        <polygon points="235,0 260,0 284,26 260,52 235,52 259,26" />
-        <polygon points="275,0 300,0 324,26 300,52 275,52 299,26" />
-        <polygon points="315,0 340,0 364,26 340,52 315,52 339,26" />
-      </g>
-
-      {/* Gold wave divider line */}
-      {withGoldWave && (
-        <path
-          d="M0 78 C170 30 355 76 514 62"
-          fill="none"
-          stroke="#e09f24"
-          strokeWidth="3.5"
-        />
-      )}
-    </svg>
+    />
   );
 }
 
@@ -122,13 +58,13 @@ export function PvcIdCardFront({ member, siteUrl }: PvcIdCardProps) {
         position: "relative",
         overflow: "hidden",
         borderRadius: "14px",
-        backgroundColor: "#1c0f04",
-        color: "#ffffff",
+        backgroundColor: "#f8f7f2",
+        color: "#0f172a",
         fontFamily: "Inter, Arial, sans-serif",
         boxSizing: "border-box",
       }}
     >
-      <CardBackgroundSvg withGoldWave={true} />
+      <CardBackgroundImage />
 
       {/* Top-right Title */}
       <div
@@ -139,23 +75,23 @@ export function PvcIdCardFront({ member, siteUrl }: PvcIdCardProps) {
           justifyContent: "flex-end",
           alignItems: "center",
           gap: "7px",
-          padding: "18px 26px 0 26px",
+          padding: "16px 24px 0 24px",
         }}
       >
         <span
           style={{
             width: "8px",
             height: "8px",
-            backgroundColor: "#e09f24",
+            backgroundColor: "#d49b27",
             display: "inline-block",
           }}
         />
         <span
           style={{
-            fontSize: "14.5px",
+            fontSize: "14px",
             fontWeight: 800,
             letterSpacing: "0.9px",
-            color: "#ffffff",
+            color: "#064e2b",
             textTransform: "uppercase",
           }}
         >
@@ -170,9 +106,9 @@ export function PvcIdCardFront({ member, siteUrl }: PvcIdCardProps) {
           zIndex: 2,
           display: "flex",
           alignItems: "flex-start",
-          gap: "22px",
-          padding: "36px 26px 20px 30px",
-          height: "calc(100% - 40px)",
+          gap: "20px",
+          padding: "36px 24px 16px 28px",
+          height: "calc(100% - 36px)",
           boxSizing: "border-box",
         }}
       >
@@ -182,23 +118,24 @@ export function PvcIdCardFront({ member, siteUrl }: PvcIdCardProps) {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            gap: "10px",
-            width: "106px",
+            gap: "9px",
+            width: "104px",
             flexShrink: 0,
             marginTop: "6px",
           }}
         >
           <div
             style={{
-              width: "100px",
-              height: "116px",
+              width: "98px",
+              height: "114px",
               borderRadius: "12px",
-              backgroundColor: "#e8ad32",
+              backgroundColor: "#ffffff",
+              border: "2.5px solid #d49b27",
               overflow: "hidden",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
+              boxShadow: "0 4px 10px rgba(6, 78, 43, 0.18)",
             }}
           >
             {member.photo_url ? (
@@ -218,7 +155,7 @@ export function PvcIdCardFront({ member, siteUrl }: PvcIdCardProps) {
                 style={{
                   fontSize: "10px",
                   fontWeight: 700,
-                  color: "#2b1706",
+                  color: "#064e2b",
                 }}
               >
                 NO PHOTO
@@ -229,10 +166,11 @@ export function PvcIdCardFront({ member, siteUrl }: PvcIdCardProps) {
           <div
             style={{
               width: "100%",
-              backgroundColor: "#e8ad32",
-              color: "#1c0f04",
+              backgroundColor: "#064e2b",
+              color: "#ffffff",
+              border: "1.5px solid #d49b27",
               borderRadius: "6px",
-              padding: "5px 6px",
+              padding: "4px 6px",
               textAlign: "center",
               fontSize: "11px",
               fontWeight: 800,
@@ -244,7 +182,7 @@ export function PvcIdCardFront({ member, siteUrl }: PvcIdCardProps) {
           </div>
         </div>
 
-        {/* Center/Right Column: Member Details + QR */}
+        {/* Center/Right Column: Member Details + Seal & QR */}
         <div
           style={{
             flex: 1,
@@ -252,63 +190,77 @@ export function PvcIdCardFront({ member, siteUrl }: PvcIdCardProps) {
             flexDirection: "column",
             justifyContent: "space-between",
             height: "100%",
-            paddingTop: "12px",
+            paddingTop: "10px",
             boxSizing: "border-box",
           }}
         >
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "74px 10px 1fr",
-              rowGap: "6px",
-              fontSize: "11px",
+              gridTemplateColumns: "68px 10px 1fr",
+              rowGap: "5px",
+              fontSize: "10.8px",
               lineHeight: 1.35,
-              color: "#ffffff",
+              color: "#0f172a",
             }}
           >
-            <span style={{ fontWeight: 700, color: "#f8fafc" }}>NAME</span>
-            <span style={{ fontWeight: 700 }}>:</span>
-            <span style={{ fontWeight: 700, textTransform: "uppercase" }}>
+            <span style={{ fontWeight: 800, color: "#064e2b" }}>NAME</span>
+            <span style={{ fontWeight: 800, color: "#064e2b" }}>:</span>
+            <span style={{ fontWeight: 800, textTransform: "uppercase", color: "#0f172a" }}>
               {member.full_name}
             </span>
 
-            <span style={{ fontWeight: 700, color: "#f8fafc" }}>DOB</span>
-            <span style={{ fontWeight: 700 }}>:</span>
-            <span style={{ fontWeight: 600 }}>{formatDobSlash(member.dob)}</span>
+            <span style={{ fontWeight: 800, color: "#064e2b" }}>DOB</span>
+            <span style={{ fontWeight: 800, color: "#064e2b" }}>:</span>
+            <span style={{ fontWeight: 700 }}>{formatDobSlash(member.dob)}</span>
 
-            <span style={{ fontWeight: 700, color: "#f8fafc" }}>CONTACT</span>
-            <span style={{ fontWeight: 700 }}>:</span>
-            <span style={{ fontWeight: 600 }}>{member.phone}</span>
+            <span style={{ fontWeight: 800, color: "#064e2b" }}>CONTACT</span>
+            <span style={{ fontWeight: 800, color: "#064e2b" }}>:</span>
+            <span style={{ fontWeight: 700 }}>{member.phone}</span>
 
-            <span style={{ fontWeight: 700, color: "#f8fafc" }}>ADDRESS</span>
-            <span style={{ fontWeight: 700 }}>:</span>
+            <span style={{ fontWeight: 800, color: "#064e2b" }}>ADDRESS</span>
+            <span style={{ fontWeight: 800, color: "#064e2b" }}>:</span>
             <span
               style={{
                 fontWeight: 600,
-                fontSize: "10.2px",
-                lineHeight: 1.38,
+                fontSize: "9.8px",
+                lineHeight: 1.35,
                 wordBreak: "break-word",
+                color: "#1e293b",
               }}
             >
               {fullAddress}
             </span>
           </div>
 
-          {/* Bottom-right QR Box */}
+          {/* Bottom-right Seal + QR Code */}
           <div
             style={{
               display: "flex",
               justifyContent: "flex-end",
               alignItems: "flex-end",
-              paddingBottom: "8px",
+              gap: "10px",
+              paddingBottom: "6px",
             }}
           >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/seal.png"
+              alt="Hudaibiyya Official Seal"
+              style={{
+                width: "62px",
+                height: "62px",
+                objectFit: "contain",
+              }}
+            />
+
             <div
               style={{
                 backgroundColor: "#ffffff",
-                padding: "5px",
-                borderRadius: "4px",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.35)",
+                padding: "4px",
+                borderRadius: "6px",
+                border: "1px solid #cbd5e1",
+                boxShadow: "0 2px 6px rgba(0,0,0,0.12)",
               }}
             >
               <QRCodeCanvas
@@ -317,7 +269,7 @@ export function PvcIdCardFront({ member, siteUrl }: PvcIdCardProps) {
                 level="M"
                 fgColor="#0f172a"
                 bgColor="#ffffff"
-                style={{ width: "68px", height: "68px", display: "block" }}
+                style={{ width: "62px", height: "62px", display: "block" }}
               />
             </div>
           </div>
@@ -340,26 +292,46 @@ export function PvcIdCardBack() {
         position: "relative",
         overflow: "hidden",
         borderRadius: "14px",
-        backgroundColor: "#1c0f04",
+        backgroundColor: "#f8f7f2",
         display: "flex",
+        flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "space-between",
+        padding: "46px 24px 20px 24px",
         boxSizing: "border-box",
+        fontFamily: "Inter, Arial, sans-serif",
       }}
     >
-      <CardBackgroundSvg withGoldWave={false} />
+      <CardBackgroundImage />
 
-      {/* Centered Circular Trust Logo (/logo.png from public/) */}
+      {/* Title above center logo (broken at Charitable) */}
       <div
         style={{
           position: "relative",
           zIndex: 2,
-          width: "136px",
-          height: "136px",
+          textAlign: "center",
+          fontSize: "15.5px",
+          fontWeight: 800,
+          lineHeight: 1.25,
+          color: "#064e2b",
+          letterSpacing: "0.3px",
+        }}
+      >
+        <div>Hudaibiyya Islamic</div>
+        <div>Charitable Trust</div>
+      </div>
+
+      {/* Centered Circular Trust Logo (/logo.png) */}
+      <div
+        style={{
+          position: "relative",
+          zIndex: 2,
+          width: "112px",
+          height: "112px",
           borderRadius: "9999px",
           backgroundColor: "#ffffff",
-          border: "4px solid #e09f24",
-          boxShadow: "0 8px 24px rgba(0,0,0,0.45)",
+          border: "3.5px solid #d49b27",
+          boxShadow: "0 6px 18px rgba(6, 78, 43, 0.22)",
           overflow: "hidden",
           display: "flex",
           alignItems: "center",
@@ -378,6 +350,21 @@ export function PvcIdCardBack() {
             objectFit: "contain",
           }}
         />
+      </div>
+
+      {/* Bottom notice text */}
+      <div
+        style={{
+          position: "relative",
+          zIndex: 2,
+          textAlign: "center",
+          fontSize: "9.5px",
+          fontWeight: 700,
+          color: "#064e2b",
+          letterSpacing: "0.15px",
+        }}
+      >
+        This identity card is required for all matters related to Hudaibiyya.
       </div>
     </div>
   );
