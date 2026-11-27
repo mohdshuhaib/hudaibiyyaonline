@@ -31,7 +31,12 @@ import {
   PROFESSION_OPTIONS,
   SHAIKHUNA_CONNECTION_OPTIONS,
 } from "@/lib/constants";
-import type { ChildDetail, ResidenceType, SubscriptionType } from "@/types/member";
+import type {
+  ChildDetail,
+  ResidenceType,
+  SubscriptionType,
+  VarisDetail,
+} from "@/types/member";
 import PhotoCropperModal from "./PhotoCropperModal";
 
 interface FormErrors {
@@ -55,6 +60,11 @@ export default function RegistrationForm() {
   const [wifeName, setWifeName] = useState("");
   const [childrenCount, setChildrenCount] = useState(0);
   const [childrenDetails, setChildrenDetails] = useState<ChildDetail[]>([]);
+  const [nomineeName, setNomineeName] = useState("");
+  const [nomineeRelation, setNomineeRelation] = useState("");
+  const [nomineePhone, setNomineePhone] = useState("");
+  const [varisCount, setVarisCount] = useState(0);
+  const [varisDetails, setVarisDetails] = useState<VarisDetail[]>([]);
 
   const [phone, setPhone] = useState("");
   const [sameAsPhone, setSameAsPhone] = useState(true);
@@ -149,6 +159,30 @@ export default function RegistrationForm() {
     value: string
   ) => {
     setChildrenDetails((prev) =>
+      prev.map((item, idx) =>
+        idx === index ? { ...item, [field]: value } : item
+      )
+    );
+  };
+
+  const handleVarisCountChange = (count: number) => {
+    setVarisCount(count);
+    setVarisDetails((prev) => {
+      if (count <= 0) return [];
+      const next: VarisDetail[] = [];
+      for (let i = 0; i < count; i++) {
+        next.push(prev[i] ?? { name: "", relation: "", qualification: "" });
+      }
+      return next;
+    });
+  };
+
+  const updateVarisDetail = (
+    index: number,
+    field: keyof VarisDetail,
+    value: string
+  ) => {
+    setVarisDetails((prev) =>
       prev.map((item, idx) =>
         idx === index ? { ...item, [field]: value } : item
       )
@@ -284,6 +318,11 @@ export default function RegistrationForm() {
         children_count: maritalStatus === "Married" ? childrenCount : 0,
         children_details:
           maritalStatus === "Married" && childrenCount > 0 ? childrenDetails : [],
+        nominee_name: nomineeName.trim() || null,
+        nominee_relation: nomineeRelation.trim() || null,
+        nominee_phone: nomineePhone.trim() || null,
+        varis_count: varisCount,
+        varis_details: varisCount > 0 ? varisDetails : [],
         phone: cleanPhone,
         whatsapp: finalWhatsapp,
         email: email.trim() || null,
@@ -349,6 +388,11 @@ export default function RegistrationForm() {
     setWifeName("");
     setChildrenCount(0);
     setChildrenDetails([]);
+    setNomineeName("");
+    setNomineeRelation("");
+    setNomineePhone("");
+    setVarisCount(0);
+    setVarisDetails([]);
     setPhone("");
     setSameAsPhone(true);
     setWhatsapp("");
@@ -693,6 +737,137 @@ export default function RegistrationForm() {
                 )}
               </>
             )}
+
+            {/* Nominee Details */}
+            <div className="sm:col-span-2 pt-3 border-t border-slate-100 space-y-3">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wide text-blue-800">
+                  നോമിനി വിവരങ്ങൾ (Nominee Details)
+                </p>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  ട്രസ്റ്റിൽ നിന്ന് സഹായം ലഭിക്കാനും അംഗത്വം തുടരാനും അർഹതയുള്ള നോമിനിയുടെ വിവരങ്ങൾ
+                </p>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    നോമിനിയുടെ പേര് (Nominee Name)
+                  </label>
+                  <input
+                    type="text"
+                    value={nomineeName}
+                    onChange={(e) => setNomineeName(e.target.value)}
+                    placeholder="പേര് നൽകുക"
+                    className="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    ബന്ധം (Relation)
+                  </label>
+                  <input
+                    type="text"
+                    value={nomineeRelation}
+                    onChange={(e) => setNomineeRelation(e.target.value)}
+                    placeholder="ഉദാ: ഭാര്യ / മകൻ (Wife / Son)"
+                    className="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    ഫോൺ നമ്പർ (Phone Number)
+                  </label>
+                  <input
+                    type="tel"
+                    value={nomineePhone}
+                    onChange={(e) => setNomineePhone(e.target.value)}
+                    placeholder="+91 98765 43210"
+                    className="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Number of Varis (Legal Heirs) */}
+            <div className="sm:col-span-2 pt-3 border-t border-slate-100 space-y-3">
+              <div>
+                <label className="block text-sm font-semibold text-slate-800 mb-1.5">
+                  അനന്തരാവകാശികളുടെ എണ്ണം (Number of Varis / Legal Heirs)
+                </label>
+                <select
+                  value={varisCount}
+                  onChange={(e) => handleVarisCountChange(Number(e.target.value))}
+                  className="w-full sm:w-1/2 rounded-xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/20"
+                >
+                  {Array.from({ length: 11 }, (_, i) => (
+                    <option key={i} value={i}>
+                      {i}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {varisCount > 0 && (
+                <div className="space-y-3 rounded-xl bg-slate-50 border border-slate-200 p-4">
+                  <p className="text-xs font-bold uppercase tracking-wide text-blue-800">
+                    അനന്തരാവകാശികളുടെ വിവരങ്ങൾ (Varis Details)
+                  </p>
+                  {varisDetails.map((v, idx) => (
+                    <div
+                      key={idx}
+                      className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 bg-white p-3 rounded-xl border border-slate-200"
+                    >
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-600 mb-1">
+                          പേര് (Name)
+                        </label>
+                        <input
+                          type="text"
+                          value={v.name}
+                          onChange={(e) =>
+                            updateVarisDetail(idx, "name", e.target.value)
+                          }
+                          placeholder={`അനന്തരാവകാശി ${idx + 1} പേര്`}
+                          className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-600 mb-1">
+                          ബന്ധം (Relation)
+                        </label>
+                        <input
+                          type="text"
+                          value={v.relation}
+                          onChange={(e) =>
+                            updateVarisDetail(idx, "relation", e.target.value)
+                          }
+                          placeholder="ഉദാ: മകൻ / മകൾ / ഭാര്യ"
+                          className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-600 mb-1">
+                          യോഗ്യത (Qualification)
+                        </label>
+                        <textarea
+                          rows={2}
+                          value={v.qualification}
+                          onChange={(e) =>
+                            updateVarisDetail(
+                              idx,
+                              "qualification",
+                              e.target.value
+                            )
+                          }
+                          placeholder="വിദ്യാഭ്യാസ യോഗ്യത നൽകുക"
+                          className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </section>
 

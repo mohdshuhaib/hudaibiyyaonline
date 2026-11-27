@@ -357,6 +357,63 @@ export default function VerifyMemberClient({
                   )}
               </div>
 
+              {/* Nominee & Varis Details */}
+              {(member.nominee_name ||
+                (member.varis_details && member.varis_details.length > 0)) && (
+                <div className="rounded-2xl bg-slate-50 border border-slate-200/80 px-4 py-2">
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-blue-800 pt-1.5 pb-1">
+                    Nominee &amp; Varis Details
+                  </p>
+                  {member.nominee_name && (
+                    <DetailRow
+                      icon={<User className="w-4 h-4 text-blue-700" />}
+                      label="Nominee"
+                      value={`${member.nominee_name}${
+                        member.nominee_relation
+                          ? ` (${member.nominee_relation})`
+                          : ""
+                      }`}
+                    />
+                  )}
+                  {member.nominee_phone && (
+                    <DetailRow
+                      icon={<Phone className="w-4 h-4 text-blue-700" />}
+                      label="Nominee Phone"
+                      value={member.nominee_phone}
+                      href={`tel:${member.nominee_phone.replace(/\s+/g, "")}`}
+                    />
+                  )}
+                  {member.varis_details && member.varis_details.length > 0 && (
+                    <div className="py-2.5 border-t border-slate-100 space-y-2">
+                      <span className="inline-flex items-center gap-2 text-xs font-medium text-slate-500">
+                        <Users className="w-4 h-4 text-blue-700" />
+                        <span>Varis / Legal Heirs ({member.varis_details.length})</span>
+                      </span>
+                      <div className="space-y-1.5 pl-6">
+                        {member.varis_details.map((v, idx) => (
+                          <div
+                            key={idx}
+                            className="text-xs bg-white rounded-lg px-2.5 py-2 border border-slate-200 space-y-0.5"
+                          >
+                            <p className="font-semibold text-slate-900">
+                              {v.name || `Varis ${idx + 1}`}{" "}
+                              {v.relation && (
+                                <span className="text-slate-500 font-normal">
+                                  ({v.relation})
+                                </span>
+                              )}
+                            </p>
+                            {v.qualification && (
+                              <p className="text-slate-600">{v.qualification}</p>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
               {/* Contact Details */}
               <div className="rounded-2xl bg-slate-50 border border-slate-200/80 px-4 py-2">
                 <p className="text-[11px] font-bold uppercase tracking-wider text-blue-800 pt-1.5 pb-1">

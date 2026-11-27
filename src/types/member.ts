@@ -8,6 +8,12 @@ export interface ChildDetail {
   dob: string;
 }
 
+export interface VarisDetail {
+  name: string;
+  relation: string;
+  qualification: string;
+}
+
 export interface Member {
   id: string;
   membership_id: string | null;
@@ -20,6 +26,11 @@ export interface Member {
   wife_name: string | null;
   children_count: number | null;
   children_details: ChildDetail[] | null;
+  nominee_name: string | null;
+  nominee_relation: string | null;
+  nominee_phone: string | null;
+  varis_count: number | null;
+  varis_details: VarisDetail[] | null;
   phone: string;
   whatsapp: string;
   email: string | null;
