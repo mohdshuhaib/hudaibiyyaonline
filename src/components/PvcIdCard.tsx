@@ -107,7 +107,7 @@ export function PvcIdCardFront({ member, siteUrl }: PvcIdCardProps) {
           display: "flex",
           alignItems: "flex-start",
           gap: "20px",
-          padding: "36px 24px 16px 28px",
+          padding: "56px 24px 14px 28px",
           height: "calc(100% - 36px)",
           boxSizing: "border-box",
         }}
@@ -118,7 +118,7 @@ export function PvcIdCardFront({ member, siteUrl }: PvcIdCardProps) {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            gap: "9px",
+            gap: "8px",
             width: "104px",
             flexShrink: 0,
             marginTop: "6px",
@@ -126,8 +126,8 @@ export function PvcIdCardFront({ member, siteUrl }: PvcIdCardProps) {
         >
           <div
             style={{
-              width: "98px",
-              height: "114px",
+              width: "96px",
+              height: "110px",
               borderRadius: "12px",
               backgroundColor: "#ffffff",
               border: "2.5px solid #d49b27",
@@ -190,7 +190,7 @@ export function PvcIdCardFront({ member, siteUrl }: PvcIdCardProps) {
             flexDirection: "column",
             justifyContent: "space-between",
             height: "100%",
-            paddingTop: "10px",
+            paddingTop: "14px",
             boxSizing: "border-box",
           }}
         >
@@ -198,9 +198,9 @@ export function PvcIdCardFront({ member, siteUrl }: PvcIdCardProps) {
             style={{
               display: "grid",
               gridTemplateColumns: "68px 10px 1fr",
-              rowGap: "5px",
-              fontSize: "10.8px",
-              lineHeight: 1.35,
+              rowGap: "4px",
+              fontSize: "10.5px",
+              lineHeight: 1.32,
               color: "#0f172a",
             }}
           >
@@ -297,7 +297,7 @@ export function PvcIdCardBack() {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "space-between",
-        padding: "46px 24px 20px 24px",
+        padding: "86px 24px 16px 24px",
         boxSizing: "border-box",
         fontFamily: "Inter, Arial, sans-serif",
       }}
@@ -310,9 +310,9 @@ export function PvcIdCardBack() {
           position: "relative",
           zIndex: 2,
           textAlign: "center",
-          fontSize: "15.5px",
+          fontSize: "15px",
           fontWeight: 800,
-          lineHeight: 1.25,
+          lineHeight: 1.22,
           color: "#064e2b",
           letterSpacing: "0.3px",
         }}
@@ -326,17 +326,17 @@ export function PvcIdCardBack() {
         style={{
           position: "relative",
           zIndex: 2,
-          width: "112px",
-          height: "112px",
+          width: "96px",
+          height: "96px",
           borderRadius: "9999px",
           backgroundColor: "#ffffff",
-          border: "3.5px solid #d49b27",
+          border: "3px solid #d49b27",
           boxShadow: "0 6px 18px rgba(6, 78, 43, 0.22)",
           overflow: "hidden",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          padding: "8px",
+          padding: "7px",
           boxSizing: "border-box",
         }}
       >

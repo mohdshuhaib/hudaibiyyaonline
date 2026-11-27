@@ -117,9 +117,9 @@ export async function renderCardFrontPng(
 
   // Left Column: Photo
   const photoX = 31 * S;
-  const photoY = 92 * S;
-  const photoW = 98 * S;
-  const photoH = 114 * S;
+  const photoY = 104 * S;
+  const photoW = 96 * S;
+  const photoH = 110 * S;
 
   ctx.save();
   drawRoundedRect(ctx, photoX, photoY, photoW, photoH, 12 * S);
@@ -164,8 +164,8 @@ export async function renderCardFrontPng(
 
   // ID Pill Badge
   const pillX = 28 * S;
-  const pillY = 216 * S;
-  const pillW = 104 * S;
+  const pillY = 222 * S;
+  const pillW = 102 * S;
   const pillH = 25 * S;
   drawRoundedRect(ctx, pillX, pillY, pillW, pillH, 6 * S);
   ctx.fillStyle = "#064e2b";
@@ -191,8 +191,8 @@ export async function renderCardFrontPng(
   const colonX = 220 * S;
   const valX = 232 * S;
   const maxValW = W - valX - 24 * S;
-  let curY = 98 * S;
-  const rowGap = 20 * S;
+  let curY = 114 * S;
+  const rowGap = 18 * S;
 
   const drawRow = (label: string, value: string, bold = false) => {
     ctx.fillStyle = "#064e2b";
@@ -283,15 +283,15 @@ export async function renderCardBackPng(): Promise<string> {
 
   // Above center logo: Hudaibiyya Islamic / Charitable Trust
   ctx.fillStyle = "#064e2b";
-  ctx.font = `800 ${15.5 * S}px Inter, Arial, sans-serif`;
+  ctx.font = `800 ${15 * S}px Inter, Arial, sans-serif`;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText("Hudaibiyya Islamic", cx, 60 * S);
-  ctx.fillText("Charitable Trust", cx, 80 * S);
+  ctx.fillText("Hudaibiyya Islamic", cx, 98 * S);
+  ctx.fillText("Charitable Trust", cx, 117 * S);
 
   // Center Circular Trust Logo (/logo.png)
-  const cy = 172 * S;
-  const radius = 56 * S;
+  const cy = 198 * S;
+  const radius = 48 * S;
 
   ctx.beginPath();
   ctx.arc(cx, cy, radius, 0, Math.PI * 2);
